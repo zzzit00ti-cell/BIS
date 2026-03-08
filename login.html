@@ -1,0 +1,388 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Login - Bonafide School System</title>
+    <style>
+        body { font-family: sans-serif; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; background-color: #f8fafc; }
+        .login-box { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: center; }
+        h1 { color: #0b6cf6; margin-bottom: 5px; }
+        p { color: #6b7280; margin-bottom: 30px; }
+        .roles button { 
+            padding: 12px 24px; 
+            margin: 5px;
+            border: none; 
+            border-radius: 8px; 
+            color: white; 
+            font-weight: 600; 
+            cursor: pointer; 
+            transition: background-color 0.2s;
+            min-width: 160px;
+        }
+        .roles button:nth-child(1) { background: #0b6cf6; } /* Admin Blue */
+        .roles button:nth-child(2) { background: #10b981; } /* Teacher Green */
+        .roles button:nth-child(3) { background: #f59e0b; } /* Student Orange */
+    :root{
+      --accent:#0b6cf6;
+      --muted:#6b7280;
+      --bg:#f8fafc;
+      --card:#ffffff;
+      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:#0f172a;line-height:1.5}
+    .container{max-width:1200px;margin:0 auto;padding:24px}
+
+    /* Header */
+    header{background:linear-gradient(90deg, rgba(11,108,246,0.06), transparent);backdrop-filter: blur(4px)}
+    .nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* logo left, menu right */
+  position: relative;
+  padding: 10px 24px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  text-align: left;
+}
+
+.brand .logo {
+  width: 335px;
+  height: 150px;
+  border-radius: 8px;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.brand-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.school-name {
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.school-tagline {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+
+@media (max-width:720px){
+  .nav {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+.brand .logo img {
+  width:100%;
+  height:100%;
+  object-fit:contain;
+}
+
+.contact-box {
+  background-color: #e0f2fe; /* light blue */
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  padding-top: 30px;
+  padding-bottom: 30px;
+  margin-top: 40px;
+  box-shadow: 0 -4px 12px rgba(0,0,0,0.05);
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+@media (max-width:768px) {
+  .gallery-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width:500px) {
+  .gallery-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+    nav ul{list-style:none;display:flex;gap:18px;margin:0;padding:0}
+    nav a{color:inherit;text-decoration:none;font-weight:600}
+
+   /* --- NEW FIXED CIRCULAR MENU STYLES --- */
+
+/* The main header wrapper is now only for the logo area */
+header {
+  /* Remove linear-gradient/blur for a cleaner look if the nav is separate */
+  background: none; 
+  backdrop-filter: none;
+  /* Ensure the header container doesn't include the fixed nav space */
+  padding-bottom: 20px; 
+}
+
+/* Make the dropdown menu fixed to the top-right corner */
+.dropdown { 
+    position: fixed; /* FIXED: Keeps it in place during scroll */
+    top: 20px;       /* Position from the top */
+    right: 20px;     /* Position from the right */
+    z-index: 100;    /* Ensure it's above other content */
+    display: inline-block; 
+}
+
+/* Style the toggle button to be a circle */
+.dropdown-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px; /* Width for the circle */
+    height: 60px; /* Height for the circle */
+    background: var(--card); /* Accent color background */
+    border-radius: 50%; /* Makes it a circle */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2); /* Lifted shadow */
+    color: black;
+    font-weight: 700;
+    font-size: 25px;
+    text-decoration: none;
+    transition: background 0.3s;
+}
+
+.dropdown-toggle:hover {
+    background: #0056e6; /* Slightly darker accent on hover */
+}
+
+/* Style the dropdown content to align with the fixed button */
+.dropdown-content { 
+    display: none; 
+    position: absolute; 
+    right: 0; 
+    /* Adjust top position to drop down cleanly from the circle button */
+    top: 70px; 
+    background-color: var(--card); 
+    box-shadow: 0 8px 20px rgba(2,6,23,0.12); 
+    border-radius: 12px; 
+    z-index: 99; /* Z-index less than the button */
+    min-width: 220px; 
+    padding: 10px 0; 
+}
+
+.dropdown-content a { 
+    color:#0f172a; 
+    padding:14px 24px; 
+    text-decoration:none; 
+    display:block; 
+    font-weight:600; 
+    font-size:15px; 
+    transition:background .15s; 
+}
+.dropdown-content a:hover { background:rgba(11,108,246,0.08); }
+/* The key to showing the menu on hover */
+.dropdown:hover .dropdown-content { display:block; }
+
+/* Mobile optimization: smaller button */
+@media (max-width: 600px) {
+    .dropdown-toggle {
+        width: 50px; 
+        height: 50px;
+        font-size: 20px;
+    }
+    .dropdown-content {
+        top: 60px; /* Adjust dropdown position for smaller button */
+    }
+}
+
+/* --- END NEW FIXED CIRCULAR MENU STYLES --- */
+
+
+    /* Hero */
+    .hero{display:flex;flex-wrap:wrap;align-items:center;gap:32px;padding:48px 0}
+    .hero-left{flex:1;min-width:280px}
+    .hero h1{font-size:clamp(28px,4vw,44px);margin:0 0 12px}
+    .hero p{color:var(--muted);margin:0 0 20px}
+    .pill {
+  display: flex;               
+  justify-content: center;     
+  align-items: center;         
+  padding: 12px 24px;          
+  background: rgba(11,108,246,0.08);
+  border-radius: 999px;
+  color: var(--accent);
+  font-weight: 600;
+  width: 100%;                 
+  box-sizing: border-box;
+}
+
+.pill h1 {
+  margin: 0;                   
+  font-size: clamp(24px, 3vw, 36px); 
+  text-align: center;          
+}
+    .hero-right{flex:1;min-width:300px;display:grid;place-items:center}
+    .hero-card{width:100%;max-width:520px;border-radius:14px;background:var(--card);padding:18px;box-shadow:0 6px 18px rgba(2,6,23,0.06)}
+    .stats{display:flex;gap:18px;justify-content:space-between;margin-top:12px}
+    .stat{flex:1;text-align:center}
+    .stat b{display:block;font-size:18px}
+
+    /* Sections */
+    section{padding:40px 0}
+    .grid{display:grid;gap:20px}
+    .three{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+    .card{background:var(--card);padding:18px;border-radius:12px;box-shadow:0 6px 18px rgba(2,6,23,0.04)}
+
+    /* Programs list */
+    .programs{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px}
+    .program .icon{width:56px;height:56px;border-radius:12px;display:grid;place-items:center;font-weight:700}
+
+    /* Footer */
+    footer{border-top:1px solid rgba(15,23,42,0.05);padding:30px 0;margin-top:30px;color:var(--muted)}
+
+    @media (max-width:720px){
+  /* Revert .nav to be a row and justify content to space logo and menu */
+  .nav {
+    flex-direction: row; /* Keep elements on the same line */
+    justify-content: space-between; /* Push logo to the left and menu to the right */
+    align-items: center; /* Vertically align them */
+  }
+
+  .hero{padding:24px 0} /* Keep the original hero adjustment */
+}
+    }
+/* --- General Mobile Adjustments (Apply to all files) --- */
+@media (max-width: 600px) {
+    /* Shrink the logo on mobile to prevent overflow and excessive height */
+    .brand .logo {
+        width: 150px; /* Smaller width */
+        height: 70px; /* Smaller height */
+        box-shadow: none;
+    }
+    
+    /* Reduce container padding on very small screens */
+    .container {
+        padding: 16px;
+    }
+
+    /* Reduce font size for section titles/pills on mobile */
+    .pill h1 {
+        /* This line ensures the title shrinks on mobile */
+        font-size: clamp(20px, 6vw, 36px);
+    }
+}
+
+    </style>
+</head>
+<body>
+<header>
+<div class="dropdown">
+  <a href="#" class="dropdown-toggle" aria-expanded="false">
+      ☰
+  </a>        <div class="dropdown-content">
+          <a href="index.html">Home 🏠</a>
+          <a href="about.html">About ✨</a>
+          <a href="gallary.html">Gallery 📷</a>
+          <a href="contact us.html">Contact us 💬</a>
+          <a href="login.html">Login 🪪</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+<div class="login-box">
+  <h1>BIS School System Login</h1>
+  <p>Enter your username and password.</p>
+
+  <form id="loginForm" style="text-align:left;min-width:320px;max-width:360px">
+    <label style="display:block;font-weight:700;margin:10px 0 6px;color:#0f172a">Username</label>
+    <input id="username" autocomplete="username" required
+      style="width:100%;padding:12px 12px;border:1px solid #e2e8f0;border-radius:10px;font-size:16px" />
+
+    <label style="display:block;font-weight:700;margin:12px 0 6px;color:#0f172a">Password</label>
+    <input id="password" type="password" autocomplete="current-password" required
+      style="width:100%;padding:12px 12px;border:1px solid #e2e8f0;border-radius:10px;font-size:16px" />
+
+    <button type="submit"
+      style="margin-top:16px;width:100%;padding:12px;border:none;border-radius:10px;background:#0b6cf6;color:white;font-weight:800;font-size:16px">
+      Sign in
+    </button>
+
+    <div style="margin-top:14px;color:#6b7280;font-size:13px;line-height:1.4">
+      Default accounts:<br>
+      Admin: <b>admin</b> / <b>Admin@2026</b><br>
+      Teacher: <b>daniel.math</b> / <b>Teacher@2026</b><br>
+      Student: <b>abebech.10a</b> / <b>Student@2026</b>
+    </div>
+
+    <button type="button"
+      style="margin-top:10px;width:100%;padding:8px;border:1px solid #e5e7eb;border-radius:8px;background:#f9fafb;color:#6b7280;font-size:12px"
+      onclick="resetBISData()">
+      Reset all accounts & announcements (use if login is broken)
+    </button>
+  </form>
+</div>
+
+<script src="js/bis_store.js"></script>
+<script>
+  (function(){
+    const form = document.getElementById('loginForm');
+    const uEl = document.getElementById('username');
+    const pEl = document.getElementById('password');
+
+    function routeByRole(role) {
+      if (role === 'admin') return 'dashboard_admin.html';
+      if (role === 'teacher') return 'dashboard_teacher.html';
+      return 'dashboard_student.html';
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const username = uEl.value;
+      const password = pEl.value;
+
+      try {
+        const res = await window.BIS.auth.verifyLogin(username, password);
+        if (!res.ok) {
+          alert(res.reason || 'Invalid login.');
+          return;
+        }
+        window.BIS.auth.setSession(res.account.id);
+        window.location.href = routeByRole(res.account.role);
+      } catch (err) {
+        console.error(err);
+        alert('Login failed. Please try again.');
+      }
+    });
+
+    window.resetBISData = function () {
+      try {
+        if (!window.BIS) {
+          alert('System not loaded yet. Please reload the page and try again.');
+          return;
+        }
+        localStorage.removeItem(window.BIS.DB_KEY);
+        sessionStorage.removeItem(window.BIS.SESSION_KEY);
+        alert('All BIS data cleared. Default accounts will be recreated after reload.\n\nUse: admin / Admin@2026 — or daniel.math / Teacher@2026, abebech.10a / Student@2026');
+        window.location.reload();
+      } catch (e) {
+        console.error(e);
+        alert('Could not reset data. Try closing the browser and reopening the site.');
+      }
+    };
+  })();
+</script>
+</body>
+</html>
