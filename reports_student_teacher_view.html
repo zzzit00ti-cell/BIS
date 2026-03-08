@@ -1,0 +1,657 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Teacher - Academic Reports - BIS</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --accent: #0b6cf6; 
+      --teacher-accent: #f59e0b; 
+      --success: #10b981; 
+      --danger: #ef4444; 
+      --muted: #6b7280;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      font-family: 'Inter', system-ui, sans-serif;
+    }
+
+    body { margin: 0; background: var(--bg); color: #0f172a; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 24px; }
+
+    header { background: linear-gradient(90deg, rgba(11,108,246,0.06), transparent); backdrop-filter: blur(4px); }
+    .nav { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 10px 24px; }
+    .brand { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .brand .logo { width: 335px; height: 150px; border-radius: 8px; background: white; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+    .brand .logo img { width: 100%; height: 100%; object-fit: contain; border-radius: 8px; }
+    .school-name { font-weight: 700; font-size: 18px; }
+    .school-tagline { font-size: 13px; color: var(--muted); }
+
+   /* --- NEW FIXED CIRCULAR MENU STYLES --- */
+
+/* The main header wrapper is now only for the logo area */
+header {
+  /* Remove linear-gradient/blur for a cleaner look if the nav is separate */
+  background: none; 
+  backdrop-filter: none;
+  /* Ensure the header container doesn't include the fixed nav space */
+  padding-bottom: 20px; 
+}
+
+/* Make the dropdown menu fixed to the top-right corner */
+.dropdown { 
+    position: fixed; /* FIXED: Keeps it in place during scroll */
+    top: 20px;       /* Position from the top */
+    right: 20px;     /* Position from the right */
+    z-index: 100;    /* Ensure it's above other content */
+    display: inline-block; 
+}
+
+/* Style the toggle button to be a circle */
+.dropdown-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px; /* Width for the circle */
+    height: 60px; /* Height for the circle */
+    background: var(--card); /* Accent color background */
+    border-radius: 50%; /* Makes it a circle */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2); /* Lifted shadow */
+    color: black;
+    font-weight: 700;
+    font-size: 25px;
+    text-decoration: none;
+    transition: background 0.3s;
+}
+
+.dropdown-toggle:hover {
+    background: #0056e6; /* Slightly darker accent on hover */
+}
+
+/* Style the dropdown content to align with the fixed button */
+.dropdown-content { 
+    display: none; 
+    position: absolute; 
+    right: 0; 
+    /* Adjust top position to drop down cleanly from the circle button */
+    top: 70px; 
+    background-color: var(--card); 
+    box-shadow: 0 8px 20px rgba(2,6,23,0.12); 
+    border-radius: 12px; 
+    z-index: 99; /* Z-index less than the button */
+    min-width: 220px; 
+    padding: 10px 0; 
+}
+
+.dropdown-content a { 
+    color:#0f172a; 
+    padding:14px 24px; 
+    text-decoration:none; 
+    display:block; 
+    font-weight:600; 
+    font-size:15px; 
+    transition:background .15s; 
+}
+.dropdown-content a:hover { background:rgba(11,108,246,0.08); }
+/* The key to showing the menu on hover */
+.dropdown:hover .dropdown-content { display:block; }
+
+/* Mobile optimization: smaller button */
+@media (max-width: 600px) {
+    .dropdown-toggle {
+        width: 50px; 
+        height: 50px;
+        font-size: 20px;
+    }
+    .dropdown-content {
+        top: 60px; /* Adjust dropdown position for smaller button */
+    }
+}
+
+/* --- END NEW FIXED CIRCULAR MENU STYLES --- */    .pill {
+      display: flex; justify-content: center; align-items: center;
+      padding: 12px 24px; background: rgba(11,108,246,0.08);
+      border-radius: 999px; color: var(--accent); font-weight: 600;
+      width: 100%; margin: 30px 0;
+    }
+    .pill h1 { margin: 0; font-size: clamp(24px, 3vw, 36px); text-align: center; }
+
+    /* --- Reports Specific Styles --- */
+    .summary-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+        margin-bottom: 40px;
+    }
+    
+    .summary-card {
+        background: var(--card);
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        border-left: 5px solid var(--teacher-accent); 
+    }
+
+    .summary-card h3 { margin-top: 0; font-size: 16px; color: var(--muted); }
+    .summary-card p { margin-bottom: 0; font-size: 28px; font-weight: 700; color: var(--accent); }
+    .summary-card:last-child { border-left: 5px solid var(--danger); }
+    .summary-card:last-child p { color: var(--danger); }
+
+    .report-section {
+        background: var(--card);
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        padding: 20px;
+    }
+
+    .table-responsive { overflow-x: auto; }
+    
+    .report-table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 900px;
+    }
+
+    .report-table th, .report-table td {
+        padding: 12px 15px;
+        text-align: left;
+        border-bottom: 1px solid #e2e8f0;
+        font-size: 15px;
+    }
+    
+    .report-table th {
+        background-color: #f8fafc;
+        font-weight: 600;
+        color: var(--accent);
+        text-transform: uppercase;
+    }
+    
+    .grade-placeholder {
+        font-weight: 700;
+        color: var(--success);
+    }
+    .failed {
+        color: var(--danger);
+        font-weight: 700;
+    }
+    .btn-edit {
+        background: var(--teacher-accent); color: white; padding: 6px 10px; border: none;
+        border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 13px;
+    }
+    .btn-edit:hover { background: #eab308; }
+
+    /* --- NEW --- Style for the disabled button */
+    .btn-edit:disabled {
+        background: var(--muted);
+        opacity: 0.7;
+        cursor: not-allowed;
+    }
+
+
+    /* --- Modal Styles --- */
+    .modal-overlay {
+        display: none; 
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background-color: rgba(0, 0, 0, 0.7); z-index: 20;
+        justify-content: center; align-items: center;
+        opacity: 0; transition: opacity 0.3s ease;
+    }
+    .modal-overlay.open {
+        display: flex;
+        opacity: 1;
+    }
+    .modal-content {
+        background-color: var(--card); border-radius: 12px; padding: 30px;
+        width: 90%; max-width: 500px; box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+        transform: translateY(-50px); transition: transform 0.3s ease;
+    }
+    .modal-overlay.open .modal-content {
+        transform: translateY(0);
+    }
+    .modal-header {
+        display: flex; justify-content: space-between; align-items: center;
+        border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 20px;
+    }
+    .modal-header h3 { margin: 0; color: var(--teacher-accent); }
+    .close-btn { 
+        font-size: 24px; font-weight: 300; cursor: pointer; color: var(--muted); 
+        border: none; background: transparent; padding: 0 8px; line-height: 1;
+    }
+    .form-group { margin-bottom: 15px; }
+    .form-group label { display: block; font-weight: 600; margin-bottom: 5px; font-size: 14px; }
+    .form-group input {
+        width: 100%; padding: 10px; border: 1px solid #e2e8f0; border-radius: 6px;
+        box-sizing: border-box; font-size: 16px;
+    }
+    .btn-save {
+        background: var(--success); color: white; padding: 10px 20px; border: none;
+        border-radius: 8px; font-weight: 600; cursor: pointer; margin-top: 10px;
+        width: 100%;
+    }
+    .btn-save:hover { background: #0c9b6f; }
+
+
+    footer {
+      border-top: 1px solid rgba(15,23,42,0.05);
+      padding: 30px 0;
+      margin-top: 30px;
+      color: var(--muted);
+      background: #e0f2fe;
+    }
+
+    /* --- Responsiveness --- */
+    @media (max-width: 768px) {
+        .summary-grid { grid-template-columns: 1fr 1fr; gap: 15px; }
+        .report-table th, .report-table td { font-size: 13px; padding: 10px 8px; }
+        .nav { padding: 10px 16px; } 
+        .container { padding: 16px; }
+        .brand .logo { width: 150px; height: 70px; box-shadow: none; }
+        .btn-edit { padding: 4px 8px; font-size: 12px; }
+        .modal-content { width: 95%; margin: 10px; }
+    }
+
+    @media (max-width: 480px) {
+        .summary-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body onload="loadGrades()">
+  <header>
+    <div class="container nav">
+      <div class="brand">
+        <div class="logo"><img src="photo_5985567029475788521_y.jpg" alt="BIS Logo"></div>
+        <div>
+          <div class="school-name">Bonafide International School (BIS)</div>
+          <div class="school-tagline">Teacher/Admin Portal</div>
+        </div>
+      </div>
+
+<div class="dropdown">
+  <a href="#" class="dropdown-toggle" aria-expanded="false">
+      ☰
+  </a>        <div class="dropdown-content">
+          <a href="dashboard_teacher.html">Dashboard 🏠</a>
+          <a href="timetable_teacher.html">My Schedule 🗓️</a>
+          <a href="reports_student_teacher_view.html">Student Reports 📊</a>
+          <a href="announcements_teacher.html">Announcements 📢</a>
+          <a href="login.html" onclick="logout()">Logout 🔒</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="pill"><h1>Academic Reports (Teacher/Editor View)</h1></div>
+
+    <div class="card" style="margin-top:10px">
+      <h2>Import student marks from image</h2>
+      <p style="color:var(--muted);margin-top:-6px">
+        Choose a report card image. The app will parse the file name for student name, grade and total mark (e.g. "Abebech_10A_93.png") and display the result.
+      </p>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:8px">
+        <input type="file" id="importImage" accept="image/*" style="max-width:260px">
+        <button class="btn-edit" style="border-radius:8px" onclick="handleImportClick()">Import</button>
+        <button class="btn-edit" style="border-radius:8px;background:#64748b" onclick="clearImport()">Skip</button>
+      </div>
+      <div id="importResult" style="margin-top:10px;font-size:14px;color:var(--muted)"></div>
+    </div>
+
+    <div class="summary-grid">
+        <div class="summary-card">
+            <h3>Year</h3>
+            <p>20XX/20YY</p>
+        </div>
+        <div class="summary-card">
+            <h3>Semester</h3>
+            <p>Semester 2</p>
+        </div>
+        <div class="summary-card">
+            <h3>Average Grade</h3>
+            <p id="overall-avg" class="grade-placeholder">9X%</p>
+        </div>
+        <div class="summary-card">
+            <h3>Attendance Rate</h3>
+            <p class="failed">XX%</p>
+        </div>
+    </div>
+
+    <section class="report-section">
+        <h2>Detailed Subject Performance (Edit Grades)</h2>
+        <div class="table-responsive">
+            <table class="report-table">
+                <thead>
+                    <tr>
+                        <th>Subject</th>
+                        <th>Teacher</th>
+                        <th>Overall Grade</th>
+                        <th>Mid-Term Score</th>
+                        <th>Final Exam Score</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr id="Math-row" data-subject="Mathematics" data-midterm="90" data-final="94" data-attendance="95">
+                        <td>Mathematics</td>
+                        <td>Mr. Daniel Bekele</td>
+                        <td class="grade-placeholder">92%</td>
+                        <td data-score="midterm">90%</td>
+                        <td data-score="final">94%</td>
+                        <td><button class="btn-edit" onclick="openEditGradeModal(this)">Edit Grade</button></td>
+                    </tr>
+                    <tr id="Physics-row" data-subject="Science/Physics" data-midterm="70" data-final="65" data-attendance="80">
+                        <td>Science/Physics</td>
+                        <td>Ms. Sofia Kassa</td>
+                        <td class="failed">68%</td>
+                        <td data-score="midterm">70%</td>
+                        <td data-score="final">65%</td>
+                        <td><button class="btn-edit" disabled>Edit Grade</button></td>
+                    </tr>
+                    <tr id="English-row" data-subject="English Literature" data-midterm="95" data-final="97" data-attendance="99">
+                        <td>English Literature</td>
+                        <td>Mr. Abebe Alene</td>
+                        <td class="grade-placeholder">96%</td>
+                        <td data-score="midterm">95%</td>
+                        <td data-score="final">97%</td>
+                        <td><button class="btn-edit" disabled>Edit Grade</button></td>
+                    </tr>
+                    <tr id="SocialStudies-row" data-subject="Social Studies" data-midterm="92" data-final="88" data-attendance="90">
+                        <td>Social Studies</td>
+                        <td>Mrs. Hanna G/Selassie</td>
+                        <td class="grade-placeholder">90%</td>
+                        <td data-score="midterm">92%</td>
+                        <td data-score="final">88%</td>
+                        <td><button class="btn-edit" disabled>Edit Grade</button></td>
+                    </tr>
+                    <tr id="Technology-row" data-subject="Technology" data-midterm="95" data-final="85" data-attendance="92">
+                        <td>Technology</td>
+                        <td>Mr. Yonas Tesfaye</td>
+                        <td class="grade-placeholder">90%</td>
+                        <td data-score="midterm">95%</td>
+                        <td data-score="final">85%</td>
+                        <td><button class="btn-edit" disabled>Edit Grade</button></td>
+                    </tr>
+                    <tr id="Biology-row" data-subject="Biology" data-midterm="85" data-final="89" data-attendance="95">
+                        <td>Biology</td>
+                        <td>Dr. Eleni Zewde</td>
+                        <td class="grade-placeholder">87%</td>
+                        <td data-score="midterm">85%</td>
+                        <td data-score="final">89%</td>
+                        <td><button class="btn-edit" disabled>Edit Grade</button></td>
+                    </tr>
+                    <tr id="Chemistry-row" data-subject="Chemistry" data-midterm="78" data-final="75" data-attendance="85">
+                        <td>Chemistry</td>
+                        <td>Mr. Fitsum Girma</td>
+                        <td>76%</td>
+                        <td data-score="midterm">78%</td>
+                        <td data-score="final">75%</td>
+                        <td><button class="btn-edit" disabled>Edit Grade</button></td>
+                    </tr>
+                    <tr id="History-row" data-subject="History" data-midterm="92" data-final="90" data-attendance="98">
+                        <td>History</td>
+                        <td>Ms. Meron Tadesse</td>
+                        <td class="grade-placeholder">91%</td>
+                        <td data-score="midterm">92%</td>
+                        <td data-score="final">90%</td>
+                        <td><button class="btn-edit" disabled>Edit Grade</button></td>
+                    </tr>
+                    <tr id="Geography-row" data-subject="Geography" data-midterm="80" data-final="85" data-attendance="90">
+                        <td>Geography</td>
+                        <td>Mr. Samuel Lemma</td>
+                        <td class="grade-placeholder">83%</td>
+                        <td data-score="midterm">80%</td>
+                        <td data-score="final">85%</td>
+                        <td><button class="btn-edit" disabled>Edit Grade</button></td>
+                    </tr>
+                    <tr id="Art-row" data-subject="Art/Design" data-midterm="98" data-final="99" data-attendance="100">
+                        <td>Art/Design</td>
+                        <td>Mrs. Kidist Alemu</td>
+                        <td class="grade-placeholder">98%</td>
+                        <td data-score="midterm">98%</td>
+                        <td data-score="final">99%</td>
+                        <td><button class="btn-edit" disabled>Edit Grade</button></td>
+                    </tr>
+                    <tr id="PE-row" data-subject="Physical Education" data-midterm="100" data-final="95" data-attendance="95">
+                        <td>Physical Education</td>
+                        <td>Coach Tsegaye Wondafrash</td>
+                        <td class="grade-placeholder">98%</td>
+                        <td data-score="midterm">100%</td>
+                        <td data-score="final">95%</td>
+                        <td><button class="btn-edit" disabled>Edit Grade</button></td>
+                    </tr>
+                    <tr id="Language-row" data-subject="Second Language" data-midterm="72" data-final="78" data-attendance="85">
+                        <td>Second Language</td>
+                        <td>Ms. Fatuma Ali</td>
+                        <td>75%</td>
+                        <td data-score="midterm">72%</td>
+                        <td data-score="final">78%</td>
+                        <td><button class="btn-edit" disabled>Edit Grade</button></td>
+                    </tr>
+                    <tr id="Ethics-row" data-subject="Life Skills/Ethics" data-midterm="95" data-final="95" data-attendance="100">
+                        <td>Life Skills/Ethics</td>
+                        <td>Mr. Dawit Moges</td>
+                        <td class="grade-placeholder">97%</td>
+                        <td data-score="midterm">95%</td>
+                        <td data-score="final">95%</td>
+                        <td><button class="btn-edit" disabled>Edit Grade</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+    
+    <div id="editGradeModal" class="modal-overlay" onclick="closeEditGradeModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <h3 id="modalSubjectName">Edit Grades for [Subject Placeholder]</h3>
+                <button class="close-btn" onclick="closeEditGradeModal()">&times;</button>
+            </div>
+            <form id="gradeEditForm" onsubmit="saveNewGrades(event)">
+                <input type="hidden" id="gradeEditSubject" name="subject">
+
+                <div class="form-group">
+                    <label for="midTermScore">Mid-Term Score (%)</label>
+                    <input type="number" id="midTermScore" name="midTermScore" min="0" max="100" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="finalExamScore">Final Exam Score (%)</label>
+                    <input type="number" id="finalExamScore" name="finalExamScore" min="0" max="100" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="attendanceScore">Attendance Score (%)</label>
+                    <input type="number" id="attendanceScore" name="attendanceScore" min="0" max="100" required>
+                </div>
+
+                <button type="submit" class="btn-save">Save & Update Grades</button>
+            </form>
+        </div>
+    </div>
+
+  </main>
+
+  <footer>
+    <div class="container" style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;align-items:center">
+      <div>
+        <strong>Bonafide International School (BIS)</strong>
+        <div style="color:var(--muted);font-size:13px">Hawassa, Ethiopia</div>
+      </div>
+      <div style="display:flex;gap:18px;align-items:center">
+        <div style="color:var(--muted);font-size:13px">Phone: +25146 2125 487</div>
+        <div style="color:var(--muted);font-size:13px">Email: Bonafideschool@gmail.com</div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/bis_store.js"></script>
+  <script>
+    BIS.auth.requireAuth({ role: 'teacher', redirectTo: 'login.html' });
+
+    // --- Grade Persistence and Calculation Functions ---
+    function calculateOverall(midTerm, finalExam, attendance) {
+        // Mock Grade Calculation: Mid-Term (40%) + Final (40%) + Attendance (20%)
+        const overall = (parseInt(midTerm) * 0.4) + (parseInt(finalExam) * 0.4) + (parseInt(attendance) * 0.2);
+        return Math.round(overall);
+    }
+
+    function updateRow(row, newMidTerm, newFinal, newAttendance, newOverall) {
+        // Update the display cells
+        row.querySelector('td:nth-child(3)').textContent = `${newOverall}%`; // Overall Grade
+        row.querySelector('td:nth-child(4)').textContent = `${newMidTerm}%`; // Mid-Term Score
+        row.querySelector('td:nth-child(5)').textContent = `${newFinal}%`; // Final Exam Score
+        
+        // Update the dataset so the modal opens with the new value next time
+        row.dataset.midterm = newMidTerm;
+        row.dataset.final = newFinal;
+        row.dataset.attendance = newAttendance; 
+
+        // Apply conditional styling for pass/fail (assuming 70% is passing)
+        const overallCell = row.querySelector('td:nth-child(3)');
+        overallCell.classList.remove('grade-placeholder', 'failed');
+        if (newOverall >= 70) {
+            overallCell.classList.add('grade-placeholder');
+        } else {
+            overallCell.classList.add('failed');
+        }
+    }
+
+    window.loadGrades = function() {
+        const rows = document.querySelectorAll('.report-table tbody tr');
+        let totalOverallGrade = 0;
+        let count = 0;
+
+        rows.forEach(row => {
+            const subject = row.dataset.subject;
+            // Key is sanitized to be safe for local storage
+            const key = `student_grades_${subject.replace(/[^a-zA-Z0-9]/g, '')}`; 
+            const storedData = localStorage.getItem(key);
+            
+            let currentMidTerm, currentFinal, currentAttendance;
+
+            if (storedData) {
+                const grades = JSON.parse(storedData);
+                currentMidTerm = grades.midTerm;
+                currentFinal = grades.finalExam;
+                currentAttendance = grades.attendance;
+            } else {
+                // Use default values if no stored data
+                currentMidTerm = row.dataset.midterm;
+                currentFinal = row.dataset.final;
+                currentAttendance = row.dataset.attendance;
+            }
+            
+            const newOverall = calculateOverall(currentMidTerm, currentFinal, currentAttendance);
+            updateRow(row, currentMidTerm, currentFinal, currentAttendance, newOverall);
+            totalOverallGrade += newOverall;
+            count++;
+        });
+
+        // Update Overall GPA Summary
+        if (count > 0) {
+            const avg = Math.round(totalOverallGrade / count);
+            const avgElement = document.getElementById('overall-avg');
+            avgElement.textContent = `${avg}%`;
+            avgElement.classList.remove('grade-placeholder', 'failed');
+            if (avg >= 70) {
+                avgElement.classList.add('grade-placeholder');
+            } else {
+                avgElement.classList.add('failed');
+            }
+        }
+    };
+
+    window.openEditGradeModal = function(buttonElement) {
+        const row = buttonElement.closest('tr');
+        const subject = row.dataset.subject;
+        const midTerm = row.dataset.midterm;
+        const finalExam = row.dataset.final;
+        const attendance = row.dataset.attendance;
+
+        document.getElementById('modalSubjectName').textContent = `Edit Grades for ${subject}`;
+        document.getElementById('gradeEditSubject').value = subject;
+        document.getElementById('midTermScore').value = midTerm;
+        document.getElementById('finalExamScore').value = finalExam;
+        document.getElementById('attendanceScore').value = attendance;
+
+        document.getElementById('editGradeModal').classList.add('open');
+    };
+
+    window.closeEditGradeModal = function(event) {
+        if (!event || event.target.id === 'editGradeModal') {
+            document.getElementById('editGradeModal').classList.remove('open');
+        }
+    };
+
+    window.saveNewGrades = function(event) {
+        event.preventDefault(); 
+
+        const subject = document.getElementById('gradeEditSubject').value;
+        const newMidTerm = document.getElementById('midTermScore').value;
+        const newFinal = document.getElementById('finalExamScore').value;
+        const newAttendance = document.getElementById('attendanceScore').value;
+
+        const newOverall = calculateOverall(newMidTerm, newFinal, newAttendance);
+
+        // 1. Save the new grades to localStorage for persistence
+        const gradesToStore = {
+            midTerm: newMidTerm,
+            finalExam: newFinal,
+            attendance: newAttendance
+        };
+        const key = `student_grades_${subject.replace(/[^a-zA-Z0-9]/g, '')}`;
+        localStorage.setItem(key, JSON.stringify(gradesToStore));
+
+        // 2. Update the display and attributes on the current (teacher) page
+        const row = document.querySelector(`tr[data-subject="${subject}"]`);
+        if (row) {
+            updateRow(row, newMidTerm, newFinal, newAttendance, newOverall);
+        }
+
+        alert(`Grades for ${subject} updated successfully!\nNew Overall Grade: ${newOverall}%`);
+        closeEditGradeModal();
+        loadGrades(); // Recalculate overall average after change
+    };
+
+    window.logout = function(){
+      BIS.auth.clearSession();
+      window.location.href = 'login.html';
+    };
+
+    // --- Import from image (demo neural network) ---
+    window.handleImportClick = function () {
+      const input = document.getElementById('importImage');
+      const file = input.files && input.files[0];
+      const resultEl = document.getElementById('importResult');
+      if (!file) {
+        alert('Please choose an image first.');
+        return;
+      }
+
+      const name = file.name.toLowerCase();
+      let studentName = 'Unknown Student';
+      let grade = '';
+      let total = '';
+
+      const mName = name.match(/([a-z]+)_?([a-z]+)/);
+      if (mName) {
+        studentName = mName[1].charAt(0).toUpperCase() + mName[1].slice(1) + ' ' +
+                      mName[2].charAt(0).toUpperCase() + mName[2].slice(1);
+      }
+      const mGrade = name.match(/g(?:rade)?(\d{1,2})/);
+      if (mGrade) grade = mGrade[1];
+      const mTotal = name.match(/(\d{2,3})\s*(?:outof|of)?\s*100/);
+      if (mTotal) total = mTotal[1] + '%';
+
+      resultEl.textContent = `Recognized -> Name: ${studentName} | Grade: ${grade || '-'} | Total mark: ${total || '-'}. You can copy these into the student account in "Manage Users".`;
+    };
+
+    window.clearImport = function () {
+      const input = document.getElementById('importImage');
+      const resultEl = document.getElementById('importResult');
+      if (input) input.value = '';
+      if (resultEl) resultEl.textContent = '';
+    };
+  </script>
+</body>
+</html>

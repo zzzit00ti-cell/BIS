@@ -1,0 +1,458 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Student - Academic Reports - BIS</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --accent: #0b6cf6; 
+      --teacher-accent: #f59e0b; 
+      --success: #10b981; 
+      --danger: #ef4444; 
+      --muted: #6b7280;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      font-family: 'Inter', system-ui, sans-serif;
+    }
+
+    body { margin: 0; background: var(--bg); color: #0f172a; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 24px; }
+
+    header { background: linear-gradient(90deg, rgba(11,108,246,0.06), transparent); backdrop-filter: blur(4px); }
+    .nav { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 10px 24px; }
+    .brand { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .brand .logo { width: 335px; height: 150px; border-radius: 8px; background: white; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+    .brand .logo img { width: 100%; height: 100%; object-fit: contain; border-radius: 8px; }
+    .school-name { font-weight: 700; font-size: 18px; }
+    .school-tagline { font-size: 13px; color: var(--muted); }
+
+   /* --- NEW FIXED CIRCULAR MENU STYLES --- */
+
+/* The main header wrapper is now only for the logo area */
+header {
+  /* Remove linear-gradient/blur for a cleaner look if the nav is separate */
+  background: none; 
+  backdrop-filter: none;
+  /* Ensure the header container doesn't include the fixed nav space */
+  padding-bottom: 20px; 
+}
+
+/* Make the dropdown menu fixed to the top-right corner */
+.dropdown { 
+    position: fixed; /* FIXED: Keeps it in place during scroll */
+    top: 20px;       /* Position from the top */
+    right: 20px;     /* Position from the right */
+    z-index: 100;    /* Ensure it's above other content */
+    display: inline-block; 
+}
+
+/* Style the toggle button to be a circle */
+.dropdown-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px; /* Width for the circle */
+    height: 60px; /* Height for the circle */
+    background: var(--card); /* Accent color background */
+    border-radius: 50%; /* Makes it a circle */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2); /* Lifted shadow */
+    color: black;
+    font-weight: 700;
+    font-size: 25px;
+    text-decoration: none;
+    transition: background 0.3s;
+}
+
+.dropdown-toggle:hover {
+    background: #0056e6; /* Slightly darker accent on hover */
+}
+
+/* Style the dropdown content to align with the fixed button */
+.dropdown-content { 
+    display: none; 
+    position: absolute; 
+    right: 0; 
+    /* Adjust top position to drop down cleanly from the circle button */
+    top: 70px; 
+    background-color: var(--card); 
+    box-shadow: 0 8px 20px rgba(2,6,23,0.12); 
+    border-radius: 12px; 
+    z-index: 99; /* Z-index less than the button */
+    min-width: 220px; 
+    padding: 10px 0; 
+}
+
+.dropdown-content a { 
+    color:#0f172a; 
+    padding:14px 24px; 
+    text-decoration:none; 
+    display:block; 
+    font-weight:600; 
+    font-size:15px; 
+    transition:background .15s; 
+}
+.dropdown-content a:hover { background:rgba(11,108,246,0.08); }
+/* The key to showing the menu on hover */
+.dropdown:hover .dropdown-content { display:block; }
+
+/* Mobile optimization: smaller button */
+@media (max-width: 600px) {
+    .dropdown-toggle {
+        width: 50px; 
+        height: 50px;
+        font-size: 20px;
+    }
+    .dropdown-content {
+        top: 60px; /* Adjust dropdown position for smaller button */
+    }
+}
+
+/* --- END NEW FIXED CIRCULAR MENU STYLES --- */    .pill {
+      display: flex; justify-content: center; align-items: center;
+      padding: 12px 24px; background: rgba(11,108,246,0.08);
+      border-radius: 999px; color: var(--accent); font-weight: 600;
+      width: 100%; margin: 30px 0;
+    }
+    .pill h1 { margin: 0; font-size: clamp(24px, 3vw, 36px); text-align: center; }
+
+    /* --- Reports Specific Styles --- */
+    .summary-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+        margin-bottom: 40px;
+    }
+    
+    .summary-card {
+        background: var(--card);
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        border-left: 5px solid var(--teacher-accent); 
+    }
+
+    .summary-card h3 { margin-top: 0; font-size: 16px; color: var(--muted); }
+    .summary-card p { margin-bottom: 0; font-size: 28px; font-weight: 700; color: var(--accent); }
+    .summary-card:last-child { border-left: 5px solid var(--danger); }
+    .summary-card:last-child p { color: var(--danger); }
+
+    .report-section {
+        background: var(--card);
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        padding: 20px;
+    }
+
+    .table-responsive { overflow-x: auto; }
+    
+    .report-table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 700px; /* Reduced width since "Actions" column is removed */
+    }
+
+    .report-table th, .report-table td {
+        padding: 12px 15px;
+        text-align: left;
+        border-bottom: 1px solid #e2e8f0;
+        font-size: 15px;
+    }
+    
+    .report-table th {
+        background-color: #f8fafc;
+        font-weight: 600;
+        color: var(--accent);
+        text-transform: uppercase;
+    }
+    
+    .grade-placeholder {
+        font-weight: 700;
+        color: var(--success);
+    }
+    .failed {
+        color: var(--danger);
+        font-weight: 700;
+    }
+
+
+    footer {
+      border-top: 1px solid rgba(15,23,42,0.05);
+      padding: 30px 0;
+      margin-top: 30px;
+      color: var(--muted);
+      background: #e0f2fe;
+    }
+
+    /* --- Responsiveness --- */
+    @media (max-width: 768px) {
+        .summary-grid { grid-template-columns: 1fr 1fr; gap: 15px; }
+        .report-table th, .report-table td { font-size: 13px; padding: 10px 8px; }
+        .nav { padding: 10px 16px; } 
+        .container { padding: 16px; }
+        .brand .logo { width: 150px; height: 70px; box-shadow: none; }
+    }
+
+    @media (max-width: 480px) {
+        .summary-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body onload="loadGrades()">
+  <header>
+    <div class="container nav">
+      <div class="brand">
+        <div class="logo"><img src="photo_5985567029475788521_y.jpg" alt="BIS Logo"></div>
+        <div>
+          <div class="school-name">Bonafide International School (BIS)</div>
+          <div class="school-tagline">Student Portal</div>
+        </div>
+      </div>
+
+<div class="dropdown">
+  <a href="#" class="dropdown-toggle" aria-expanded="false">
+      ☰
+  </a>        <div class="dropdown-content">
+          <a href="dashboard_student.html">Dashboard 🏠</a>
+          <a href="timetable_student.html">Class Timetable 🗓️</a>
+          <a href="reports_academic.html">Academic Reports 🎓</a>
+          <a href="announcements_student.html">School Announcements 📢</a>
+          <a href="login.html" onclick="logout()">Logout 🔒</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="pill"><h1>Academic Reports (Your Grades)</h1></div>
+
+    <div class="summary-grid">
+        <div class="summary-card">
+            <h3>Year</h3>
+            <p>20XX/20YY</p>
+        </div>
+        <div class="summary-card">
+            <h3>Semester</h3>
+            <p>Semester 2</p>
+        </div>
+        <div class="summary-card">
+            <h3>Average Grade</h3>
+            <p id="overall-avg" class="grade-placeholder">9X%</p>
+        </div>
+        <div class="summary-card">
+            <h3>Attendance Rate</h3>
+            <p class="failed">XX%</p>
+        </div>
+    </div>
+
+    <section class="report-section">
+        <h2>Detailed Subject Performance (13 Classes)</h2>
+        <div class="table-responsive">
+            <table class="report-table">
+                <thead>
+                    <tr>
+                        <th>Subject</th>
+                        <th>Teacher</th>
+                        <th>Overall Grade</th>
+                        <th>Mid-Term Score</th>
+                        <th>Final Exam Score</th>
+                        </tr>
+                </thead>
+                <tbody>
+                    <tr data-subject="Mathematics" data-midterm="90" data-final="94" data-attendance="95">
+                        <td>Mathematics</td>
+                        <td>Teacher Placeholder 1</td>
+                        <td class="grade-placeholder">92%</td>
+                        <td data-score="midterm">90%</td>
+                        <td data-score="final">94%</td>
+                    </tr>
+                    <tr data-subject="Science/Physics" data-midterm="70" data-final="65" data-attendance="80">
+                        <td>Science/Physics</td>
+                        <td>Teacher Placeholder 2</td>
+                        <td class="failed">68%</td>
+                        <td data-score="midterm">70%</td>
+                        <td data-score="final">65%</td>
+                    </tr>
+                    <tr data-subject="English Literature" data-midterm="95" data-final="97" data-attendance="99">
+                        <td>English Literature</td>
+                        <td>Teacher Placeholder 3</td>
+                        <td class="grade-placeholder">96%</td>
+                        <td data-score="midterm">95%</td>
+                        <td data-score="final">97%</td>
+                    </tr>
+                    <tr data-subject="Social Studies" data-midterm="92" data-final="88" data-attendance="90">
+                        <td>Social Studies</td>
+                        <td>Teacher Placeholder 4</td>
+                        <td class="grade-placeholder">90%</td>
+                        <td data-score="midterm">92%</td>
+                        <td data-score="final">88%</td>
+                    </tr>
+                    <tr data-subject="Technology" data-midterm="95" data-final="85" data-attendance="92">
+                        <td>Technology</td>
+                        <td>Teacher Placeholder 5</td>
+                        <td class="grade-placeholder">90%</td>
+                        <td data-score="midterm">95%</td>
+                        <td data-score="final">85%</td>
+                    </tr>
+                    <tr data-subject="Biology" data-midterm="85" data-final="89" data-attendance="95">
+                        <td>Biology</td>
+                        <td>Teacher Placeholder 6</td>
+                        <td class="grade-placeholder">87%</td>
+                        <td data-score="midterm">85%</td>
+                        <td data-score="final">89%</td>
+                    </tr>
+                    <tr data-subject="Chemistry" data-midterm="78" data-final="75" data-attendance="85">
+                        <td>Chemistry</td>
+                        <td>Teacher Placeholder 7</td>
+                        <td>76%</td>
+                        <td data-score="midterm">78%</td>
+                        <td data-score="final">75%</td>
+                    </tr>
+                    <tr data-subject="History" data-midterm="92" data-final="90" data-attendance="98">
+                        <td>History</td>
+                        <td>Teacher Placeholder 8</td>
+                        <td class="grade-placeholder">91%</td>
+                        <td data-score="midterm">92%</td>
+                        <td data-score="final">90%</td>
+                    </tr>
+                    <tr data-subject="Geography" data-midterm="80" data-final="85" data-attendance="90">
+                        <td>Geography</td>
+                        <td>Teacher Placeholder 9</td>
+                        <td class="grade-placeholder">83%</td>
+                        <td data-score="midterm">80%</td>
+                        <td data-score="final">85%</td>
+                    </tr>
+                    <tr data-subject="Art/Design" data-midterm="98" data-final="99" data-attendance="100">
+                        <td>Art/Design</td>
+                        <td>Teacher Placeholder 10</td>
+                        <td class="grade-placeholder">98%</td>
+                        <td data-score="midterm">98%</td>
+                        <td data-score="final">99%</td>
+                    </tr>
+                    <tr data-subject="Physical Education" data-midterm="100" data-final="95" data-attendance="95">
+                        <td>Physical Education</td>
+                        <td>Teacher Placeholder 11</td>
+                        <td class="grade-placeholder">98%</td>
+                        <td data-score="midterm">100%</td>
+                        <td data-score="final">95%</td>
+                    </tr>
+                    <tr data-subject="Second Language" data-midterm="72" data-final="78" data-attendance="85">
+                        <td>Second Language</td>
+                        <td>Teacher Placeholder 12</td>
+                        <td>75%</td>
+                        <td data-score="midterm">72%</td>
+                        <td data-score="final">78%</td>
+                    </tr>
+                    <tr data-subject="Life Skills/Ethics" data-midterm="95" data-final="95" data-attendance="100">
+                        <td>Life Skills/Ethics</td>
+                        <td>Teacher Placeholder 13</td>
+                        <td class="grade-placeholder">97%</td>
+                        <td data-score="midterm">95%</td>
+                        <td data-score="final">95%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+    
+    </main>
+
+  <footer>
+    <div class="container" style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;align-items:center">
+      <div>
+        <strong>Bonafide International School (BIS)</strong>
+        <div style="color:var(--muted);font-size:13px">Hawassa, Ethiopia</div>
+      </div>
+      <div style="display:flex;gap:18px;align-items:center">
+        <div style="color:var(--muted);font-size:13px">Phone: +25146 2125 487</div>
+        <div style="color:var(--muted);font-size:13px">Email: Bonafideschool@gmail.com</div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/bis_store.js"></script>
+  <script>
+    BIS.auth.requireAuth({ role: 'student', redirectTo: 'login.html' });
+
+    // --- Grade Loading and Calculation Functions ---
+    
+    function calculateOverall(midTerm, finalExam, attendance) {
+        // Mock Grade Calculation: Mid-Term (40%) + Final (40%) + Attendance (20%)
+        const overall = (parseInt(midTerm) * 0.4) + (parseInt(finalExam) * 0.4) + (parseInt(attendance) * 0.2);
+        return Math.round(overall);
+    }
+
+    function updateRow(row, newMidTerm, newFinal, newAttendance, newOverall) {
+        // Update the display cells
+        row.querySelector('td:nth-child(3)').textContent = `${newOverall}%`; // Overall Grade
+        row.querySelector('td:nth-child(4)').textContent = `${newMidTerm}%`; // Mid-Term Score
+        row.querySelector('td:nth-child(5)').textContent = `${newFinal}%`; // Final Exam Score
+        
+        // Update the dataset so if the student somehow navigates to the teacher view, the correct data loads
+        row.dataset.midterm = newMidTerm;
+        row.dataset.final = newFinal;
+        row.dataset.attendance = newAttendance; 
+
+        // Apply conditional styling for pass/fail (assuming 70% is passing)
+        const overallCell = row.querySelector('td:nth-child(3)');
+        overallCell.classList.remove('grade-placeholder', 'failed');
+        if (newOverall >= 70) {
+            overallCell.classList.add('grade-placeholder');
+        } else {
+            overallCell.classList.add('failed');
+        }
+    }
+
+    window.loadGrades = function() {
+        const rows = document.querySelectorAll('.report-table tbody tr');
+        let totalOverallGrade = 0;
+        let count = 0;
+
+        rows.forEach(row => {
+            const subject = row.dataset.subject;
+            // Key is sanitized to be safe for local storage
+            const key = `student_grades_${subject.replace(/[^a-zA-Z0-9]/g, '')}`; 
+            const storedData = localStorage.getItem(key);
+            
+            let currentMidTerm, currentFinal, currentAttendance;
+
+            if (storedData) {
+                const grades = JSON.parse(storedData);
+                currentMidTerm = grades.midTerm;
+                currentFinal = grades.finalExam;
+                currentAttendance = grades.attendance;
+            } else {
+                // Use default values if no stored data
+                currentMidTerm = row.dataset.midterm;
+                currentFinal = row.dataset.final;
+                currentAttendance = row.dataset.attendance;
+            }
+            
+            const newOverall = calculateOverall(currentMidTerm, currentFinal, currentAttendance);
+            updateRow(row, currentMidTerm, currentFinal, currentAttendance, newOverall);
+            totalOverallGrade += newOverall;
+            count++;
+        });
+
+        // Update Overall GPA Summary
+        if (count > 0) {
+            const avg = Math.round(totalOverallGrade / count);
+            const avgElement = document.getElementById('overall-avg');
+            avgElement.textContent = `${avg}%`;
+            avgElement.classList.remove('grade-placeholder', 'failed');
+            if (avg >= 70) {
+                avgElement.classList.add('grade-placeholder');
+            } else {
+                avgElement.classList.add('failed');
+            }
+        }
+    };
+
+    window.logout = function(){
+      BIS.auth.clearSession();
+      window.location.href = 'login.html';
+    };
+  </script>
+</body>
+</html>
