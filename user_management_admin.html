@@ -1,0 +1,607 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>User Management - Bonafide International School</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --accent: #0b6cf6;
+      --secondary: #10b981; 
+      --warning: #f59e0b; 
+      --danger: #ef4444;
+      --muted: #6b7280;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      font-family: 'Inter', system-ui, sans-serif;
+    }
+
+    body { margin: 0; background: var(--bg); color: #0f172a; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 24px; }
+
+    header { background: linear-gradient(90deg, rgba(11,108,246,0.06), transparent); backdrop-filter: blur(4px); }
+    .nav { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 10px 24px; }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand .logo { width: 335px; height: 150px; border-radius: 8px; background: white; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+    .brand .logo img { width: 100%; height: 100%; object-fit: contain; border-radius: 8px; }
+    .school-name { font-weight: 700; font-size: 18px; }
+    .school-tagline { font-size: 13px; color: var(--muted); }
+
+   /* --- NEW FIXED CIRCULAR MENU STYLES --- */
+
+/* The main header wrapper is now only for the logo area */
+header {
+  /* Remove linear-gradient/blur for a cleaner look if the nav is separate */
+  background: none; 
+  backdrop-filter: none;
+  /* Ensure the header container doesn't include the fixed nav space */
+  padding-bottom: 20px; 
+}
+
+/* Make the dropdown menu fixed to the top-right corner */
+.dropdown { 
+    position: fixed; /* FIXED: Keeps it in place during scroll */
+    top: 20px;       /* Position from the top */
+    right: 20px;     /* Position from the right */
+    z-index: 100;    /* Ensure it's above other content */
+    display: inline-block; 
+}
+
+/* Style the toggle button to be a circle */
+.dropdown-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px; /* Width for the circle */
+    height: 60px; /* Height for the circle */
+    background: var(--card); /* Accent color background */
+    border-radius: 50%; /* Makes it a circle */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2); /* Lifted shadow */
+    color: black;
+    font-weight: 700;
+    font-size: 25px;
+    text-decoration: none;
+    transition: background 0.3s;
+}
+
+.dropdown-toggle:hover {
+    background: #0056e6; /* Slightly darker accent on hover */
+}
+
+/* Style the dropdown content to align with the fixed button */
+.dropdown-content { 
+    display: none; 
+    position: absolute; 
+    right: 0; 
+    /* Adjust top position to drop down cleanly from the circle button */
+    top: 70px; 
+    background-color: var(--card); 
+    box-shadow: 0 8px 20px rgba(2,6,23,0.12); 
+    border-radius: 12px; 
+    z-index: 99; /* Z-index less than the button */
+    min-width: 220px; 
+    padding: 10px 0; 
+}
+
+.dropdown-content a { 
+    color:#0f172a; 
+    padding:14px 24px; 
+    text-decoration:none; 
+    display:block; 
+    font-weight:600; 
+    font-size:15px; 
+    transition:background .15s; 
+}
+.dropdown-content a:hover { background:rgba(11,108,246,0.08); }
+/* The key to showing the menu on hover */
+.dropdown:hover .dropdown-content { display:block; }
+
+/* Mobile optimization: smaller button */
+@media (max-width: 600px) {
+    .dropdown-toggle {
+        width: 50px; 
+        height: 50px;
+        font-size: 20px;
+    }
+    .dropdown-content {
+        top: 60px; /* Adjust dropdown position for smaller button */
+    }
+}
+
+/* --- END NEW FIXED CIRCULAR MENU STYLES --- */
+    .pill {
+      display: flex; justify-content: center; align-items: center;
+      padding: 12px 24px; background: rgba(11,108,246,0.08);
+      border-radius: 999px; color: var(--accent); font-weight: 600;
+      width: 100%; margin: 30px 0 20px;
+    }
+    .pill h1 { margin: 0; font-size: clamp(24px, 3vw, 36px); text-align: center; }
+
+    /* --- User Management Layout --- */
+    .management-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 25px;
+    }
+    .card {
+        background: var(--card);
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        padding: 20px;
+        border-top: 5px solid var(--accent);
+    }
+    .card.teacher-card { border-top-color: var(--secondary); }
+    .card h2 { margin-top: 0; display: flex; align-items: center; justify-content: space-between; font-size: 24px; color: #0f172a; }
+
+    /* Search and Filter */
+    .search-bar {
+        width: 100%;
+        padding: 10px 15px;
+        margin-bottom: 15px;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        font-size: 16px;
+        box-sizing: border-box;
+    }
+
+    /* Table Styling */
+    .table-container {
+        max-height: 550px;
+        overflow-y: auto;
+    }
+    .user-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        font-size: 15px;
+    }
+    .user-table th, .user-table td {
+        padding: 12px 15px;
+        text-align: left;
+        border-bottom: 1px solid #f1f5f9;
+    }
+    .user-table th {
+        background-color: #f8fafc;
+        color: var(--muted);
+        font-weight: 600;
+        position: sticky;
+        top: 0;
+        z-index: 1;
+    }
+    .user-table tr:hover {
+        background-color: #e0f2fe;
+    }
+    .user-id { font-weight: 600; color: var(--accent); }
+    .user-role-teacher { color: var(--secondary); font-weight: 600; }
+    .user-role-student { color: var(--accent); font-weight: 600; }
+
+    /* Status Pills */
+    .status-active { color: var(--secondary); background: #ecfdf5; padding: 4px 8px; border-radius: 6px; font-size: 13px; font-weight: 700; }
+    .status-inactive { color: var(--danger); background: #fee2e2; padding: 4px 8px; border-radius: 6px; font-size: 13px; font-weight: 700; }
+
+    /* Action Buttons */
+    .action-group { display: flex; gap: 8px; }
+    .view-btn {
+        background: none;
+        border: 1px solid var(--accent);
+        color: var(--accent);
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-weight: 600;
+        transition: all 0.2s;
+    }
+    .view-btn:hover { background: var(--accent); color: white; }
+
+    .remove-btn {
+        background: var(--danger);
+        border: 1px solid var(--danger);
+        color: white;
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-weight: 600;
+        transition: background 0.2s;
+    }
+    .remove-btn:hover { background: #c33; border-color: #c33; }
+
+    .add-user-btn {
+        background: var(--accent);
+        color: white;
+        padding: 10px 18px;
+        border-radius: 8px;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+        transition: background 0.2s;
+        margin-bottom: 15px;
+        display: block;
+    }
+    .add-user-btn:hover { background: #0855c3; }
+
+    /* --- Add User Form Styles --- */
+    .add-user-form-container {
+        background: var(--card);
+        border-radius: 12px;
+        padding: 25px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        margin-bottom: 25px;
+        border-top: 5px solid var(--secondary);
+    }
+
+    .add-user-form-container h3 {
+        margin-top: 0;
+        color: var(--secondary);
+    }
+    .form-group { margin-bottom: 15px; }
+    .form-group label { display: block; font-weight: 600; margin-bottom: 5px; font-size: 15px; }
+    .form-group input, .form-group select {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+        box-sizing: border-box;
+        font-size: 16px;
+    }
+    .form-actions { display: flex; gap: 10px; margin-top: 20px; }
+    .form-actions button { flex: 1; padding: 10px; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; }
+    .form-actions .submit-btn { background: var(--secondary); color: white; }
+    .form-actions .cancel-btn { background: #ccc; color: #333; }
+
+
+    footer {
+      border-top: 1px solid rgba(15,23,42,0.05);
+      padding: 30px 0;
+      margin-top: 30px;
+      color: var(--muted);
+      background: #e0f2fe;
+    }
+    button { cursor: pointer; }
+
+    /* --- Responsiveness --- */
+    @media (max-width: 900px) {
+        .management-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 600px) {
+        .nav { padding: 10px 16px; } 
+        .container { padding: 16px; }
+        .brand .logo { width: 150px; height: 70px; box-shadow: none; }
+    }
+  </style>
+</head>
+<body onload="loadUsers()">
+  <header>
+    <div class="container nav">
+      <div class="brand">
+        <div class="logo"><img src="photo_5985567029475788521_y.jpg" alt="BIS Logo"></div>
+        <div>
+          <div class="school-name">Bonafide International School (BIS)</div>
+          <div class="school-tagline">Admin Portal - User Management</div>
+        </div>
+      </div>
+
+<div class="dropdown">
+  <a href="#" class="dropdown-toggle" aria-expanded="false">
+      ☰
+  </a>        <div class="dropdown-content">
+          <a href="user_management_admin.html">Manage Users 👥</a>
+          <a href="announcement_admin.html">Announcements 📢</a>
+          <a href="login.html" onclick="logout()">Logout 🔒</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="pill"><h1>Administrator User Directory</h1></div>
+
+    <button class="add-user-btn" onclick="toggleAddUserForm()">➕ Add New User</button>
+
+    <div id="addUserFormContainer" class="add-user-form-container" style="display: none;">
+        <h3>Add New Teacher or Student</h3>
+        <form id="addUserForm">
+            <div class="form-group">
+                <label for="userRole">Role:</label>
+                <select id="userRole" name="userRole" required onchange="updateDetailVisibility()">
+                    <option value="student">Student</option>
+                    <option value="teacher">Teacher</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="userName">Full Name:</label>
+                <input type="text" id="userName" name="userName" required placeholder="e.g., Abebe Kebede">
+            </div>
+            <div class="form-group">
+                <label for="userUsername">Login username:</label>
+                <input type="text" id="userUsername" name="userUsername" required placeholder="Short ID, e.g., abebe10a">
+            </div>
+            <div class="form-group">
+                <label for="userInitialPassword">Initial password (optional):</label>
+                <input type="password" id="userInitialPassword" name="userInitialPassword" placeholder="Leave blank for ChangeMe123" minlength="8" autocomplete="new-password">
+                <small style="color:var(--muted);font-size:12px">Min 8 chars, include letters and a number.</small>
+            </div>
+            <div class="form-group">
+                <label for="userPhoto">Photo (optional):</label>
+                <input type="file" id="userPhoto" accept="image/*">
+            </div>
+            <div id="studentFields">
+                <div class="form-group">
+                    <label for="studentGrade">Grade:</label>
+                    <input type="text" id="studentGrade" placeholder="e.g., 10">
+                </div>
+                <div class="form-group">
+                    <label for="studentAge">Age:</label>
+                    <input type="number" id="studentAge" min="3" max="25">
+                </div>
+                <div class="form-group">
+                    <label for="studentSex">Sex:</label>
+                    <select id="studentSex">
+                        <option value="">Select</option>
+                        <option value="F">Female</option>
+                        <option value="M">Male</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="studentTeacher">Teacher name:</label>
+                    <input type="text" id="studentTeacher" placeholder="e.g., Mr. Daniel Bekele">
+                </div>
+                <div class="form-group">
+                    <label for="studentTotalMark">Total mark:</label>
+                    <input type="text" id="studentTotalMark" placeholder="e.g., 93%">
+                </div>
+            </div>
+            <div id="teacherFields" style="display:none">
+                <div class="form-group">
+                    <label for="teacherSubject">Subject:</label>
+                    <input type="text" id="teacherSubject" placeholder="e.g., Physics">
+                </div>
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="submit-btn">Create Account</button>
+                <button type="button" class="cancel-btn" onclick="toggleAddUserForm()">Cancel</button>
+            </div>
+        </form>
+    </div>
+    <div class="management-grid">
+
+        <div class="card teacher-card">
+            <h2>Teacher Directory</h2>
+            <input type="text" class="search-bar" id="teacherSearch" onkeyup="filterTable('teacherTable', this.value)" placeholder="Search by name, ID, or subject...">
+            <div class="table-container">
+                <table class="user-table" id="teacherTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Subject</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="teacherTableBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card student-card">
+            <h2>Student Roster</h2>
+            <input type="text" class="search-bar" id="studentSearch" onkeyup="filterTable('studentTable', this.value)" placeholder="Search by name, ID, or class...">
+            <div class="table-container">
+                <table class="user-table" id="studentTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Class</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="studentTableBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+  </main>
+
+  <footer>
+    <div class="container" style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;align-items:center">
+      <div>
+        <strong>Bonafide International School (BIS)</strong>
+        <div style="color:var(--muted);font-size:13px">Hawassa, Ethiopia</div>
+      </div>
+      <div style="display:flex;gap:18px;align-items:center">
+        <div style="color:var(--muted);font-size:13px">Phone: +25146 2125 487</div>
+        <div style="color:var(--muted);font-size:13px">Email: Bonafideschool@gmail.com</div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/bis_store.js"></script>
+  <script>
+    const adminAcct = BIS.auth.requireAuth({ role: 'admin', redirectTo: 'login.html' });
+
+    window.logout = function () {
+      BIS.auth.clearSession();
+      window.location.href = 'login.html';
+    };
+
+    function accountsToRowModel(acct) {
+      return {
+        id: acct.id,
+        role: acct.role,
+        name: acct.displayName || acct.username,
+        detail: acct.role === 'teacher' ? (acct.profile?.subject || '') : (acct.profile?.grade || ''),
+        status: acct.status || 'Active',
+      };
+    }
+
+    function renderUserTable(userList, tableBodyId, role) {
+        const tableBody = document.getElementById(tableBodyId);
+        tableBody.innerHTML = ''; 
+
+        if (userList.length === 0) {
+            tableBody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:var(--muted);">No ${role} users found.</td></tr>`;
+            return;
+        }
+
+      userList.forEach((user) => {
+            const row = tableBody.insertRow();
+            
+            const idClass = user.role === 'teacher' ? 'user-role-teacher' : 'user-role-student';
+            const statusClass = user.status === 'Active' ? 'status-active' : 'status-inactive';
+            
+            row.insertCell().innerHTML = `<span class="${idClass}">${user.id}</span>`;
+            row.insertCell().textContent = user.name;
+            row.insertCell().textContent = user.detail; 
+            row.insertCell().innerHTML = `<span class="${statusClass}">${user.status}</span>`;
+            
+            const actionCell = row.insertCell();
+
+            const viewButton = `<button class="view-btn" onclick="viewUserDashboard('${user.id}', '${user.role}')">View Dashboard</button>`;
+            const removeButton = `<button class="remove-btn" onclick="removeUser('${user.id}')">Remove</button>`;
+        const resetPwButton = `<button class="view-btn" style="border-color:#10b981;color:#10b981" onclick="resetPassword('${user.id}')">Reset Password</button>`;
+
+        actionCell.innerHTML = `<div class="action-group">${viewButton}${resetPwButton}${removeButton}</div>`;
+      });
+    }
+
+    window.loadUsers = function () {
+      const accounts = BIS.accounts.list();
+      const teachers = accounts.filter((a) => a.role === 'teacher').map(accountsToRowModel);
+      const students = accounts.filter((a) => a.role === 'student').map(accountsToRowModel);
+        renderUserTable(teachers, 'teacherTableBody', 'teacher');
+        renderUserTable(students, 'studentTableBody', 'student');
+    };
+
+    window.filterTable = function (tableId, searchTerm) {
+        const table = document.getElementById(tableId);
+        const rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr'); 
+        const filter = searchTerm.toUpperCase();
+
+        for (let i = 0; i < rows.length; i++) {
+        const rowText = rows[i].textContent || rows[i].innerText;
+            if (rowText.toUpperCase().indexOf(filter) > -1) {
+          rows[i].style.display = '';
+            } else {
+          rows[i].style.display = 'none';
+        }
+      }
+    };
+
+    window.viewUserDashboard = function (userId, role) {
+      const acct = BIS.accounts.list().find((a) => a.id === userId);
+      if (!acct) {
+        alert('Account not found.');
+        return;
+      }
+      // Set session as that user to view their dashboard.
+      BIS.auth.setSession(acct.id);
+        if (role === 'student') {
+            window.location.href = 'dashboard_student.html';
+        } else if (role === 'teacher') {
+            window.location.href = 'dashboard_teacher.html';
+        }
+    };
+
+    window.removeUser = function (userId) {
+      if (!confirm(`Are you sure you want to permanently remove user ${userId}?`)) {
+        return;
+      }
+      try {
+        BIS.accounts.remove(userId, { who: adminAcct?.id || 'admin' });
+        loadUsers();
+      } catch (err) {
+        alert(err?.message || 'Failed to remove user.');
+      }
+    };
+
+    window.resetPassword = async function (userId) {
+      const temp = prompt('Enter a temporary password for this account (min 8 chars, include a number):', 'ChangeMe123');
+      if (!temp) return;
+      try {
+        await BIS.accounts.setPassword(userId, temp, { mustChangePassword: true, who: adminAcct?.id || 'admin' });
+        alert('Password reset. Give the new password to the user; they will be asked to change it on next login.');
+      } catch (err) {
+        alert(err?.message || 'Failed to reset password.');
+      }
+    };
+
+    window.toggleAddUserForm = function () {
+      const formContainer = document.getElementById('addUserFormContainer');
+      const isVisible = formContainer.style.display === 'block';
+      formContainer.style.display = isVisible ? 'none' : 'block';
+      if (!isVisible) {
+        document.getElementById('userName').focus();
+      }
+    };
+
+    window.updateDetailVisibility = function () {
+      const role = document.getElementById('userRole').value;
+      document.getElementById('studentFields').style.display = role === 'student' ? 'block' : 'none';
+      document.getElementById('teacherFields').style.display = role === 'teacher' ? 'block' : 'none';
+    };
+
+    function fileToDataUrl(file) {
+      return new Promise((resolve, reject) => {
+        if (!file) return resolve('');
+        const reader = new FileReader();
+        reader.onload = () => resolve(String(reader.result || ''));
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+
+    document.getElementById('addUserForm').addEventListener('submit', async function (event) {
+      event.preventDefault();
+
+      const role = document.getElementById('userRole').value;
+      const name = document.getElementById('userName').value.trim();
+      const username = document.getElementById('userUsername').value.trim();
+      const photoFile = document.getElementById('userPhoto').files[0];
+
+      if (!name || !username) {
+        alert('Please fill in name and username.');
+        return;
+      }
+
+      const initialPassword = document.getElementById('userInitialPassword').value.trim();
+      if (initialPassword) {
+        const err = BIS.accounts.validatePassword ? BIS.accounts.validatePassword(initialPassword) : null;
+        if (err) { alert(err); return; }
+      }
+      const payload = {
+        role,
+        name,
+        username,
+        tempPassword: initialPassword || undefined,
+      };
+
+      if (role === 'student') {
+        payload.grade = document.getElementById('studentGrade').value.trim();
+        payload.age = document.getElementById('studentAge').value.trim();
+        payload.sex = document.getElementById('studentSex').value;
+        payload.teacherName = document.getElementById('studentTeacher').value.trim();
+        payload.marks = { total: document.getElementById('studentTotalMark').value.trim(), details: [] };
+      } else {
+        payload.subject = document.getElementById('teacherSubject').value.trim();
+      }
+
+      try {
+        payload.photoDataUrl = await fileToDataUrl(photoFile);
+        const { account, tempPassword } = await BIS.accounts.create(payload, { who: adminAcct?.id || 'admin' });
+        loadUsers();
+        document.getElementById('addUserForm').reset();
+        updateDetailVisibility();
+        toggleAddUserForm();
+        alert(`New ${role.toUpperCase()} created!\nID: ${account.id}\nUsername: ${account.username}\nTemporary password: ${tempPassword}`);
+      } catch (err) {
+        alert(err?.message || 'Failed to create account.');
+      }
+    });
+  </script>
+</body>
+</html>
