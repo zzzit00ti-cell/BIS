@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin - Manage School Announcements</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --accent: #0b6cf6; /* Admin theme color */
+      --secondary: #10b981; 
+      --warning: #f59e0b; 
+      --muted: #6b7280;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --danger: #ef4444; /* Red for Delete */
+      font-family: 'Inter', system-ui, sans-serif;
+    }
+
+    body { margin: 0; background: var(--bg); color: #0f172a; }
+    .container { max-width: 1000px; margin: 0 auto; padding: 24px; }
+
+    header { background: linear-gradient(90deg, rgba(11,108,246,0.06), transparent); backdrop-filter: blur(4px); }
+    .nav { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 10px 24px; }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand .logo { width: 335px; height: 150px; border-radius: 8px; background: white; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+    .brand .logo img { width: 100%; height: 100%; object-fit: contain; border-radius: 8px; }
+    .school-name { font-weight: 700; font-size: 18px; }
+    .school-tagline { font-size: 13px; color: var(--muted); }
+
+       /* --- NEW FIXED CIRCULAR MENU STYLES --- */
+
+/* The main header wrapper is now only for the logo area */
+header {
+  /* Remove linear-gradient/blur for a cleaner look if the nav is separate */
+  background: none; 
+  backdrop-filter: none;
+  /* Ensure the header container doesn't include the fixed nav space */
+  padding-bottom: 20px; 
+}
+
+/* Make the dropdown menu fixed to the top-right corner */
+.dropdown { 
+    position: fixed; /* FIXED: Keeps it in place during scroll */
+    top: 20px;       /* Position from the top */
+    right: 20px;     /* Position from the right */
+    z-index: 100;    /* Ensure it's above other content */
+    display: inline-block; 
+}
+
+/* Style the toggle button to be a circle */
+.dropdown-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px; /* Width for the circle */
+    height: 60px; /* Height for the circle */
+    background: var(--card); /* Accent color background */
+    border-radius: 50%; /* Makes it a circle */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2); /* Lifted shadow */
+    color: black;
+    font-weight: 700;
+    font-size: 25px;
+    text-decoration: none;
+    transition: background 0.3s;
+}
+
+.dropdown-toggle:hover {
+    background: #0056e6; /* Slightly darker accent on hover */
+}
+
+/* Style the dropdown content to align with the fixed button */
+.dropdown-content { 
+    display: none; 
+    position: absolute; 
+    right: 0; 
+    /* Adjust top position to drop down cleanly from the circle button */
+    top: 70px; 
+    background-color: var(--card); 
+    box-shadow: 0 8px 20px rgba(2,6,23,0.12); 
+    border-radius: 12px; 
+    z-index: 99; /* Z-index less than the button */
+    min-width: 220px; 
+    padding: 10px 0; 
+}
+
+.dropdown-content a { 
+    color:#0f172a; 
+    padding:14px 24px; 
+    text-decoration:none; 
+    display:block; 
+    font-weight:600; 
+    font-size:15px; 
+    transition:background .15s; 
+}
+.dropdown-content a:hover { background:rgba(11,108,246,0.08); }
+/* The key to showing the menu on hover */
+.dropdown:hover .dropdown-content { display:block; }
+
+/* Mobile optimization: smaller button */
+@media (max-width: 600px) {
+    .dropdown-toggle {
+        width: 50px; 
+        height: 50px;
+        font-size: 20px;
+    }
+    .dropdown-content {
+        top: 60px; /* Adjust dropdown position for smaller button */
+    }
+}
+
+/* --- END NEW FIXED CIRCULAR MENU STYLES --- */
+
+    .pill {
+      display: flex; justify-content: center; align-items: center;
+      padding: 12px 24px; background: rgba(11,108,246,0.1); 
+      border-radius: 999px; color: var(--accent); font-weight: 600;
+      width: 100%; margin: 30px 0 20px;
+    }
+    .pill h1 { margin: 0; font-size: clamp(24px, 3vw, 36px); text-align: center; }
+
+    /* --- Form and List Styles --- */
+    .card {
+      background: var(--card);
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      padding: 25px;
+      margin-bottom: 25px;
+      border-top: 5px solid var(--warning);
+    }
+    .card h2 { margin-top: 0; color: var(--warning); font-size: 24px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 15px; }
+
+    /* Form Styles */
+    label { display: block; font-weight: 600; margin-top: 15px; margin-bottom: 5px; color: #333; }
+    input[type="text"], textarea {
+        width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 8px;
+        box-sizing: border-box; font-size: 16px; font-family: 'Inter', system-ui, sans-serif;
+    }
+    textarea { resize: vertical; min-height: 150px; }
+    .btn {
+        padding: 10px 20px; border: none; border-radius: 8px; font-weight: 600;
+        cursor: pointer; margin-top: 20px; transition: background-color 0.2s ease;
+    }
+    .btn-primary { background: var(--accent); color: white; margin-right: 10px; }
+    .btn-primary:hover { background: #0855c3; }
+    .btn-secondary { background: #e2e8f0; color: #333; }
+    .btn-secondary:hover { background: #cbd5e1; }
+
+    /* Announcement List Styles */
+    .announcement-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        border-bottom: 1px dashed #e2e8f0;
+        padding: 15px 0;
+    }
+    .announcement-item:last-child { border-bottom: none; }
+    .announcement-content { flex-grow: 1; margin-right: 20px; }
+    .announcement-content h3 { margin: 0 0 5px; font-size: 18px; color: #333; }
+    .announcement-content p { margin: 0 0 8px; font-size: 15px; color: #555; white-space: pre-wrap; }
+    .announcement-meta { font-size: 12px; color: var(--muted); }
+    
+    .announcement-actions {
+        display: flex;
+        gap: 8px;
+        flex-shrink: 0;
+        padding-top: 5px;
+    }
+    .btn-edit, .btn-delete {
+        padding: 8px 12px;
+        font-size: 13px;
+    }
+    .btn-edit { background: var(--secondary); color: white; }
+    .btn-edit:hover { background: #0b9e6f; }
+    .btn-delete { background: var(--danger); color: white; }
+    .btn-delete:hover { background: #c53030; }
+
+    #noAnnouncements {
+        text-align: center;
+        padding: 40px;
+        background: #fefcbf10;
+        border-radius: 8px;
+        color: var(--muted);
+        border: 1px dashed var(--warning);
+    }
+    .success-message {
+        background: #ecfdf5;
+        color: var(--secondary);
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        font-weight: 600;
+        display: none;
+    }
+
+
+    footer {
+      border-top: 1px solid rgba(15,23,42,0.05);
+      padding: 30px 0;
+      margin-top: 30px;
+      color: var(--muted);
+      background: #e0f2fe;
+    }
+    
+    /* --- Responsiveness --- */
+    @media (max-width: 600px) {
+        .nav { padding: 10px 16px; } 
+        .container { padding: 16px; }
+        .brand .logo { width: 150px; height: 70px; box-shadow: none; }
+        .announcement-item { flex-direction: column; }
+        .announcement-actions { margin-top: 10px; }
+    }
+  </style>
+</head>
+<body onload="loadAnnouncements()">
+  <header>
+    <div class="container nav">
+      <div class="brand">
+        <div class="logo"><img src="photo_5985567029475788521_y.jpg" alt="BIS Logo"></div>
+        <div>
+          <div class="school-name">Bonafide International School (BIS)</div>
+          <div class="school-tagline">Admin Portal - Announcement Management</div>
+        </div>
+      </div>
+
+<div class="dropdown">
+  <a href="#" class="dropdown-toggle" aria-expanded="false">
+      ☰
+  </a>        <div class="dropdown-content">
+          <a href="user_management_admin.html">Manage Users 👥</a>
+          <a href="announcement_admin.html">Announcements 📢</a>
+          <a href="login.html" onclick="logout()">Logout 🔒</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="pill"><h1>Manage School Announcements</h1></div>
+
+    <div class="card">
+        <h2 id="formTitle">Create New Announcement</h2>
+        <div id="successMessage" class="success-message">Announcement successfully saved and published!</div>
+        <form id="announcementForm">
+            <input type="hidden" id="announcementId" value="">
+            
+            <label for="title">Title</label>
+            <input type="text" id="title" name="title" required placeholder="e.g., Important School Closure Notification">
+            
+            <label for="body">Content</label>
+            <textarea id="body" name="body" required placeholder="Enter the full details of the announcement here..."></textarea>
+            
+            <button type="submit" class="btn btn-primary" id="submitButton">Publish Announcement</button>
+            <button type="button" class="btn btn-secondary" id="cancelButton" onclick="resetForm()" style="display:none;">Cancel Edit</button>
+        </form>
+    </div>
+
+    <div class="card">
+        <h2>Published Announcements</h2>
+        <div id="announcementList">
+            <div id="loadingMessage" style="text-align: center; padding: 40px; color: var(--muted);">Loading announcements...</div>
+        </div>
+    </div>
+
+  </main>
+
+  <footer>
+    <div class="container" style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;align-items:center">
+      <div>
+        <strong>Bonafide International School (BIS)</strong>
+        <div style="color:var(--muted);font-size:13px">Hawassa, Ethiopia</div>
+      </div>
+      <div style="display:flex;gap:18px;align-items:center">
+        <div style="color:var(--muted);font-size:13px">Phone: +25146 2125 487</div>
+        <div style="color:var(--muted);font-size:13px">Email: Bonafideschool@gmail.com</div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/bis_store.js"></script>
+  <script>
+    const acct = BIS.auth.requireAuth({ role: 'admin', redirectTo: 'login.html' });
+    const ADMIN_AUTHOR = 'Admin (School Management)';
+
+    const success = document.getElementById('successMessage');
+    const form = document.getElementById('announcementForm');
+    const idField = document.getElementById('announcementId');
+    const titleField = document.getElementById('title');
+    const bodyField = document.getElementById('body');
+
+    function showSuccess(msg) {
+      success.textContent = msg;
+      success.style.display = 'block';
+      setTimeout(() => { success.style.display = 'none'; }, 2500);
+    }
+
+    window.loadAnnouncements = function () {
+      const announcements = BIS.announcements.list();
+      const listContainer = document.getElementById('announcementList');
+      listContainer.innerHTML = '';
+
+      if (announcements.length === 0) {
+        const empty = document.createElement('div');
+        empty.id = 'noAnnouncements';
+        empty.textContent = 'No announcements have been created yet.';
+        listContainer.appendChild(empty);
+        return;
+      }
+
+      for (const ann of announcements) {
+        const item = document.createElement('div');
+        item.className = 'announcement-item';
+
+        const content = document.createElement('div');
+        content.className = 'announcement-content';
+
+        const h3 = document.createElement('h3');
+        h3.textContent = ann.title || '';
+        const p = document.createElement('p');
+        p.textContent = ann.body || '';
+        const meta = document.createElement('div');
+        meta.className = 'announcement-meta';
+        meta.textContent = `Published by ${ann.author || ADMIN_AUTHOR} on ${ann.date || ''}`;
+
+        content.appendChild(h3);
+        content.appendChild(p);
+        content.appendChild(meta);
+
+        const actions = document.createElement('div');
+        actions.className = 'announcement-actions';
+
+        const editBtn = document.createElement('button');
+        editBtn.className = 'btn btn-edit';
+        editBtn.textContent = 'Edit';
+        editBtn.onclick = () => editAnnouncement(ann.id);
+
+        const delBtn = document.createElement('button');
+        delBtn.className = 'btn btn-delete';
+        delBtn.textContent = 'Delete';
+        delBtn.onclick = () => deleteAnnouncement(ann.id);
+
+        actions.appendChild(editBtn);
+        actions.appendChild(delBtn);
+
+        item.appendChild(content);
+        item.appendChild(actions);
+        listContainer.appendChild(item);
+      }
+    };
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      const existingId = parseInt(idField.value || '0', 10);
+      const ann = {
+        id: existingId > 0 ? existingId : undefined,
+        title: titleField.value.trim(),
+        body: bodyField.value.trim(),
+        author: ADMIN_AUTHOR,
+        date: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }),
+      };
+      BIS.announcements.save(ann, { who: acct?.id || 'admin' });
+      showSuccess(existingId > 0 ? 'Announcement updated.' : 'Announcement published.');
+      resetForm();
+      loadAnnouncements();
+    });
+
+    window.editAnnouncement = function (id) {
+      const ann = BIS.announcements.list().find((a) => a.id === id);
+      if (!ann) return;
+      idField.value = ann.id;
+      titleField.value = ann.title || '';
+      bodyField.value = ann.body || '';
+      document.getElementById('formTitle').textContent = 'Edit Announcement';
+      document.getElementById('submitButton').textContent = 'Update Announcement';
+      document.getElementById('cancelButton').style.display = 'inline-block';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    window.deleteAnnouncement = function (id) {
+      if (!confirm('Are you sure you want to delete this announcement?')) return;
+      BIS.announcements.delete(id, { who: acct?.id || 'admin' });
+      loadAnnouncements();
+      resetForm();
+    };
+
+    window.resetForm = function () {
+      form.reset();
+      idField.value = '';
+      document.getElementById('formTitle').textContent = 'Create New Announcement';
+      document.getElementById('submitButton').textContent = 'Publish Announcement';
+      document.getElementById('cancelButton').style.display = 'none';
+    };
+
+    window.logout = function () {
+      BIS.auth.clearSession();
+      window.location.href = 'login.html';
+    };
+  </script>
+</body>
+</html>

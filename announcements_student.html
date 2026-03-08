@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>School Announcements - Student Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --accent: #0b6cf6; /* Student theme color */
+      --secondary: #10b981; 
+      --warning: #f59e0b; 
+      --muted: #6b7280;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      font-family: 'Inter', system-ui, sans-serif;
+    }
+
+    body { margin: 0; background: var(--bg); color: #0f172a; }
+    .container { max-width: 900px; margin: 0 auto; padding: 24px; }
+
+    header { background: linear-gradient(90deg, rgba(11,108,246,0.06), transparent); backdrop-filter: blur(4px); }
+    .nav { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 10px 24px; }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand .logo { width: 335px; height: 150px; border-radius: 8px; background: white; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+    .brand .logo img { width: 100%; height: 100%; object-fit: contain; border-radius: 8px; }
+    .school-name { font-weight: 700; font-size: 18px; }
+    .school-tagline { font-size: 13px; color: var(--muted); }
+
+    /* --- NEW FIXED CIRCULAR MENU STYLES --- */
+
+/* The main header wrapper is now only for the logo area */
+header {
+  /* Remove linear-gradient/blur for a cleaner look if the nav is separate */
+  background: none; 
+  backdrop-filter: none;
+  /* Ensure the header container doesn't include the fixed nav space */
+  padding-bottom: 20px; 
+}
+
+/* Make the dropdown menu fixed to the top-right corner */
+.dropdown { 
+    position: fixed; /* FIXED: Keeps it in place during scroll */
+    top: 20px;       /* Position from the top */
+    right: 20px;     /* Position from the right */
+    z-index: 100;    /* Ensure it's above other content */
+    display: inline-block; 
+}
+
+/* Style the toggle button to be a circle */
+.dropdown-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px; /* Width for the circle */
+    height: 60px; /* Height for the circle */
+    background: var(--card); /* Accent color background */
+    border-radius: 50%; /* Makes it a circle */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2); /* Lifted shadow */
+    color: black;
+    font-weight: 700;
+    font-size: 25px;
+    text-decoration: none;
+    transition: background 0.3s;
+}
+
+.dropdown-toggle:hover {
+    background: #0056e6; /* Slightly darker accent on hover */
+}
+
+/* Style the dropdown content to align with the fixed button */
+.dropdown-content { 
+    display: none; 
+    position: absolute; 
+    right: 0; 
+    /* Adjust top position to drop down cleanly from the circle button */
+    top: 70px; 
+    background-color: var(--card); 
+    box-shadow: 0 8px 20px rgba(2,6,23,0.12); 
+    border-radius: 12px; 
+    z-index: 99; /* Z-index less than the button */
+    min-width: 220px; 
+    padding: 10px 0; 
+}
+
+.dropdown-content a { 
+    color:#0f172a; 
+    padding:14px 24px; 
+    text-decoration:none; 
+    display:block; 
+    font-weight:600; 
+    font-size:15px; 
+    transition:background .15s; 
+}
+.dropdown-content a:hover { background:rgba(11,108,246,0.08); }
+/* The key to showing the menu on hover */
+.dropdown:hover .dropdown-content { display:block; }
+
+/* Mobile optimization: smaller button */
+@media (max-width: 600px) {
+    .dropdown-toggle {
+        width: 50px; 
+        height: 50px;
+        font-size: 20px;
+    }
+    .dropdown-content {
+        top: 60px; /* Adjust dropdown position for smaller button */
+    }
+}
+
+/* --- END NEW FIXED CIRCULAR MENU STYLES --- */
+
+    .pill {
+      display: flex; justify-content: center; align-items: center;
+      padding: 12px 24px; background: rgba(245,158,11,0.1); /* Warning color for Announcements */
+      border-radius: 999px; color: var(--warning); font-weight: 600;
+      width: 100%; margin: 30px 0 20px;
+    }
+    .pill h1 { margin: 0; font-size: clamp(24px, 3vw, 36px); text-align: center; }
+
+    /* --- Announcement Card Styles --- */
+    .announcement-list-container {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        margin-top: 25px;
+    }
+    .announcement-card {
+        background: var(--card);
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        padding: 25px;
+        border-left: 5px solid var(--warning);
+    }
+    .announcement-card h3 {
+        margin-top: 0;
+        margin-bottom: 8px;
+        color: #333;
+        font-size: 22px;
+    }
+    .announcement-meta {
+        font-size: 13px;
+        color: var(--muted);
+        margin-bottom: 15px;
+        border-bottom: 1px dashed #e2e8f0;
+        padding-bottom: 8px;
+    }
+    .announcement-body {
+        font-size: 16px;
+        color: #333;
+        white-space: pre-wrap;
+    }
+    #noAnnouncements {
+        text-align: center;
+        padding: 40px;
+        background: #fff;
+        border-radius: 12px;
+        color: var(--muted);
+        border: 1px dashed #e2e8f0;
+    }
+
+
+    footer {
+      border-top: 1px solid rgba(15,23,42,0.05);
+      padding: 30px 0;
+      margin-top: 30px;
+      color: var(--muted);
+      background: #e0f2fe; /* Light blue footer */
+    }
+    
+    /* --- Responsiveness --- */
+    @media (max-width: 600px) {
+        .nav { padding: 10px 16px; } 
+        .container { padding: 16px; }
+        .brand .logo { width: 150px; height: 70px; box-shadow: none; }
+    }
+  </style>
+</head>
+<body onload="loadAnnouncements()">
+  <header>
+    <div class="container nav">
+      <div class="brand">
+        <div class="logo"><img src="photo_5985567029475788521_y.jpg" alt="BIS Logo"></div>
+        <div>
+          <div class="school-name">Bonafide International School (BIS)</div>
+          <div class="school-tagline">Student Portal - School Announcements</div>
+        </div>
+      </div>
+
+      <div class="dropdown">
+  <a href="#" class="dropdown-toggle" aria-expanded="false">
+      ☰
+  </a>
+        <div class="dropdown-content">
+          <a href="dashboard_student.html">Dashboard 🏠</a>
+          <a href="timetable_student.html">Class Timetable 🗓️</a>
+          <a href="reports_academic.html">Academic Reports 🎓</a>
+          <a href="announcements_student.html">School Announcements 📢</a>
+          <a href="login.html" onclick="logout()">Logout 🔒</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="pill"><h1>Official School Announcements</h1></div>
+
+    <div id="announcementList" class="announcement-list-container">
+        <div id="loadingMessage" style="text-align: center; padding: 40px; color: var(--muted);">Loading announcements...</div>
+    </div>
+
+  </main>
+
+  <footer>
+    <div class="container" style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;align-items:center">
+      <div>
+        <strong>Bonafide International School (BIS)</strong>
+        <div style="color:var(--muted);font-size:13px">Hawassa, Ethiopia</div>
+      </div>
+      <div style="display:flex;gap:18px;align-items:center">
+        <div style="color:var(--muted);font-size:13px">Phone: +25146 2125 487</div>
+        <div style="color:var(--muted);font-size:13px">Email: Bonafideschool@gmail.com</div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/bis_store.js"></script>
+  <script>
+    BIS.auth.requireAuth({ role: 'student', redirectTo: 'login.html' });
+
+    window.loadAnnouncements = function () {
+      const announcements = BIS.announcements.list();
+      const listContainer = document.getElementById('announcementList');
+      listContainer.innerHTML = '';
+
+      if (announcements.length === 0) {
+        const empty = document.createElement('div');
+        empty.id = 'noAnnouncements';
+        empty.textContent = 'No school announcements have been published yet.';
+        listContainer.appendChild(empty);
+        return;
+      }
+
+      for (const ann of announcements) {
+        const card = document.createElement('div');
+        card.className = 'announcement-card';
+
+        const h3 = document.createElement('h3');
+        h3.textContent = `📢 ${ann.title || ''}`;
+        const meta = document.createElement('div');
+        meta.className = 'announcement-meta';
+        meta.textContent = `Published by ${ann.author || ''} on ${ann.date || ''}`;
+        const body = document.createElement('div');
+        body.className = 'announcement-body';
+        body.textContent = ann.body || '';
+
+        card.appendChild(h3);
+        card.appendChild(meta);
+        card.appendChild(body);
+        listContainer.appendChild(card);
+      }
+    };
+
+    window.logout = function () {
+      BIS.auth.clearSession();
+      window.location.href = 'login.html';
+    };
+  </script>
+</body>
+</html>
