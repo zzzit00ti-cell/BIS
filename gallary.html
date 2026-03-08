@@ -1,0 +1,405 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Bonafide International School — Gallery</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --accent:#0b6cf6;
+      --muted:#6b7280;
+      --bg:#f8fafc;
+      --card:#ffffff;
+      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:#0f172a;line-height:1.5}
+    .container{max-width:1200px;margin:0 auto;padding:24px}
+
+    /* Header */
+    header{background:linear-gradient(90deg, rgba(11,108,246,0.06), transparent);backdrop-filter: blur(4px)}
+    .nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:10px 24px}
+    .brand{display:flex;align-items:center;gap:12px}
+    .brand .logo{width:335px;height:150px;border-radius:8px;background:white;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,0,0,0.1)}
+    .brand .logo img{width:100%;height:100%;object-fit:contain;border-radius:8px}
+    .school-name{font-weight:700;font-size:18px}
+    .school-tagline{font-size:13px;color:var(--muted)}
+   /* --- NEW FIXED CIRCULAR MENU STYLES --- */
+
+/* The main header wrapper is now only for the logo area */
+header {
+  /* Remove linear-gradient/blur for a cleaner look if the nav is separate */
+  background: none; 
+  backdrop-filter: none;
+  /* Ensure the header container doesn't include the fixed nav space */
+  padding-bottom: 20px; 
+}
+
+/* Make the dropdown menu fixed to the top-right corner */
+.dropdown { 
+    position: fixed; /* FIXED: Keeps it in place during scroll */
+    top: 20px;       /* Position from the top */
+    right: 20px;     /* Position from the right */
+    z-index: 100;    /* Ensure it's above other content */
+    display: inline-block; 
+}
+
+/* Style the toggle button to be a circle */
+.dropdown-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px; /* Width for the circle */
+    height: 60px; /* Height for the circle */
+    background: var(--card); /* Accent color background */
+    border-radius: 50%; /* Makes it a circle */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2); /* Lifted shadow */
+    color: black;
+    font-weight: 700;
+    font-size: 25px;
+    text-decoration: none;
+    transition: background 0.3s;
+}
+
+.dropdown-toggle:hover {
+    background: #0056e6; /* Slightly darker accent on hover */
+}
+
+/* Style the dropdown content to align with the fixed button */
+.dropdown-content { 
+    display: none; 
+    position: absolute; 
+    right: 0; 
+    /* Adjust top position to drop down cleanly from the circle button */
+    top: 70px; 
+    background-color: var(--card); 
+    box-shadow: 0 8px 20px rgba(2,6,23,0.12); 
+    border-radius: 12px; 
+    z-index: 99; /* Z-index less than the button */
+    min-width: 220px; 
+    padding: 10px 0; 
+}
+
+.dropdown-content a { 
+    color:#0f172a; 
+    padding:14px 24px; 
+    text-decoration:none; 
+    display:block; 
+    font-weight:600; 
+    font-size:15px; 
+    transition:background .15s; 
+}
+.dropdown-content a:hover { background:rgba(11,108,246,0.08); }
+/* The key to showing the menu on hover */
+.dropdown:hover .dropdown-content { display:block; }
+
+/* Mobile optimization: smaller button */
+@media (max-width: 600px) {
+    .dropdown-toggle {
+        width: 50px; 
+        height: 50px;
+        font-size: 20px;
+    }
+    .dropdown-content {
+        top: 60px; /* Adjust dropdown position for smaller button */
+    }
+}
+
+/* --- END NEW FIXED CIRCULAR MENU STYLES --- */
+    /* Title pill */
+    .pill{display:flex;justify-content:center;align-items:center;padding:12px 24px;background:rgba(11,108,246,0.08);border-radius:999px;color:var(--accent);font-weight:600;margin-bottom:32px}
+    .pill h1{margin:0;font-size:clamp(22px,3vw,34px)}
+
+    /* Gallery grid */
+    .gallery-section{margin-bottom:48px}
+    .gallery-section h2{text-align:center;margin-bottom:12px;font-size:20px;color:#0f172a}
+    .gallery-grid{
+      display:grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap:18px;
+      align-items:start;
+    }
+
+    .gallery-card{
+      background:var(--card);
+      border-radius:10px;
+      box-shadow:0 4px 12px rgba(0,0,0,0.05);
+      padding:10px;
+      text-align:center;
+      transition:transform .16s ease,box-shadow .16s ease;
+      height:100%;
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      align-items:center;
+    }
+    .gallery-card:hover{transform:translateY(-6px);box-shadow:0 10px 22px rgba(0,0,0,0.10)}
+
+    .gallery-card img{
+      width:100%;
+      height:auto;
+      max-height:160px;
+      object-fit:cover;
+      border-radius:8px;
+      background:#e6e9ee;
+      display:block;
+    }
+
+    .caption{font-weight:700;color:#0f172a;font-size:14px}
+    .subcaption{color:var(--muted);font-size:13px}
+
+    footer{border-top:1px solid rgba(15,23,42,0.05);padding:24px 0;margin-top:20px;color:var(--muted);background:#e0f2fe}
+
+    @media (max-width:1100px){
+      .gallery-grid{grid-template-columns:repeat(3,1fr)}
+      .gallery-card img{max-height:150px}
+    }
+    @media (max-width:680px){
+      .gallery-grid{grid-template-columns:repeat(2,1fr)}
+      .gallery-card img{max-height:140px}
+    }
+    @media (max-width:420px){
+      .gallery-grid{grid-template-columns:1fr}
+      .gallery-card img{max-height:220px}
+    }
+/* for circular / avatar style images */
+.profile-card img {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin: 0 auto; /* center horizontally */
+}
+
+/* reduce padding / spacing inside profile cards, center align text */
+.profile-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+/* maybe reduce the shadow or hover transform a bit so it’s more subtle */
+.profile-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+}
+/* --- General Mobile Adjustments (Apply to all files) --- */
+@media (max-width: 600px) {
+    /* Shrink the logo on mobile to prevent overflow and excessive height */
+    .brand .logo {
+        width: 150px; /* Smaller width */
+        height: 70px; /* Smaller height */
+        box-shadow: none;
+    }
+    
+    /* Reduce container padding on very small screens */
+    .container {
+        padding: 16px;
+    }
+
+    /* Reduce font size for section titles/pills on mobile */
+    .pill h1 {
+        /* This line ensures the title shrinks on mobile */
+        font-size: clamp(20px, 6vw, 36px);
+    }
+}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <div class="brand">
+        <div class="logo"><img src="photo_5985567029475788521_y.jpg" alt="BIS Logo"></div>
+        <div>
+          <div class="school-name">Bonafide International School (BIS)</div>
+          <div class="school-tagline">Center of Quality Education</div>
+        </div>
+      </div>
+
+<div class="dropdown">
+  <a href="#" class="dropdown-toggle" aria-expanded="false">
+      ☰
+  </a>        <div class="dropdown-content">
+          <a href="index.html">Home 🏠</a>
+          <a href="about.html">About ✨</a>
+          <a href="gallary.html">Gallery 📷</a>
+          <a href="contact us.html">Contact us 💬</a>
+          <a href="login.html">Login 🪪</a
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="pill"><h1>Bonafide School Gallery</h1></div>
+
+    <!-- Founder -->
+    <section class="gallery-card profile-card">
+      <h2>Founder</h2>
+      <div class="gallery-grid">
+        <div class="gallery-card">
+          <img src="f.jpg" alt="Founder" loading="lazy">
+          <div class="caption">Argawu Gugsa</div>
+          <div class="subcaption">Founder & Visionary Leader</div>
+        </div>
+      </div>
+    </section>
+
+<!-- Academic Staff (Circular Style) -->
+<section class="gallery-section">
+  <h2>Academic Staff</h2>
+  <div class="gallery-grid">
+    <div class="gallery-card profile-card">
+      <img src="desta.jpg" alt="Desta" loading="lazy">
+      <div class="caption">Mr. Desta Kebede</div>
+      <div class="subcaption">Managing Director</div>
+    </div>
+
+    <div class="gallery-card profile-card">
+      <img src="negu.jpg" alt="Negu" loading="lazy">
+      <div class="caption">Mr. Negash Bekele</div>
+      <div class="subcaption">Secondery School Principal</div>
+    </div>
+
+    <div class="gallery-card profile-card">
+      <img src="wonde.jpg" alt="Wonde" loading="lazy">
+      <div class="caption">Mr. Wondimagegn Worku</div>
+      <div class="subcaption">Primary School Principal</div>
+    </div>
+
+    <div class="gallery-card profile-card">
+      <img src="fre.jpg" alt="Fre" loading="lazy">
+      <div class="caption">Firehiwot Kebede</div>
+      <div class="subcaption">KG Directress</div>
+    </div>
+
+    <div class="gallery-card profile-card">
+      <img src="shime.jpg" alt="Shime" loading="lazy">
+      <div class="caption">Mr. Shimelis</div>
+      <div class="subcaption">Deputy Director</div>
+    </div>
+    <div class="gallery-card profile-card">
+      <img src="semu.jpg" alt="Shime" loading="lazy">
+      <div class="caption">Mr. Semunigus G/Giorgis</div>
+      <div class="subcaption">Administration and Finance Head</div>
+    </div>
+  </div>
+</section>
+
+<!-- Department Heads (with circular images) -->
+<section class="gallery-section">
+  <h2>Department Heads</h2>
+  <div class="gallery-grid">
+    <div class="gallery-card profile-card">
+      <img src="01.jpg" alt="Dept Head 1" loading="lazy">
+      <div class="caption">Mr. Markos Medhin</div>
+      <div class="subcaption">English Dep.Head</div>
+    </div>
+    <div class="gallery-card profile-card">
+      <img src="02.jpg" alt="Dept Head 3" loading="lazy">
+      <div class="caption">Mr. Amde Girma</div>
+      <div class="subcaption">Math Dep.Head</div>
+    </div>
+    <div class="gallery-card profile-card">
+      <img src="03.png" alt="Dept Head 2" loading="lazy">
+      <div class="caption">Mr. Yohannes Kutaye</div>
+      <div class="subcaption">IT Admin & ICT Dep.Head</div>
+    </div>
+    <div class="gallery-card profile-card">
+      <img src="04.jpg" alt="Advisor 4" loading="lazy">
+      <div class="caption">Mr. Kibret Ayuba</div>
+      <div class="subcaption">Science Dep.Head</div>
+    </div>
+    <div class="gallery-card profile-card">
+      <img src="05.jpg" alt="Mr. Biruk Tesfaye" loading="lazy">
+      <div class="caption">Mr. Biruk Tesfaye</div>
+      <div class="subcaption">Aesthetics and Sport Science Dep.Head</div>
+    </div>
+    <div class="gallery-card profile-card">
+      <img src="004.jpg" alt="Dept Head 5" loading="lazy">
+      <div class="caption">Mr. Abreham</div>
+      <div class="subcaption">Amharic Dep.Head</div>
+    </div>
+  </div>
+</section>
+
+<!-- Technical Advisors (same style) -->
+<section class="gallery-section">
+  <h2>Bonafide School Technical Advisors</h2>
+  <div class="gallery-grid">
+    <div class="gallery-card profile-card">
+      <img src="001.jpg" alt="Mr. Firew Bekele" loading="lazy">
+      <div class="caption">Mr. Firew Bekele</div>
+      <div class="subcaption">Technical Advisor</div>
+    </div>
+    <div class="gallery-card profile-card">
+      <img src="002.jpg" alt="Advisor 2" loading="lazy">
+      <div class="caption">Mr Yimer Asfawu</div>
+      <div class="subcaption">Technical Advisor</div>
+    </div>
+  </div>
+</section>
+
+    <!-- Kindergarten -->
+    <section class="gallery-section">
+      <h2>Kindergarten (KG)</h2>
+      <div class="gallery-grid">
+        <div class="gallery-card"><img src="w.jpg" alt="KG1" loading="lazy"><div class="caption">Lineup</div><div class="subcaption">Students in the lineup</div></div>
+        <div class="gallery-card"><img src="e.jpg" alt="KG2" loading="lazy"><div class="caption">Dinning room</div><div class="subcaption">Students dining room.</div></div>
+        <div class="gallery-card"><img src="q.jpg" alt="KG3" loading="lazy"><div class="caption">Play area</div><div class="subcaption">Kids playing Area</div></div>
+        <div class="gallery-card"><img src="t.jpg" alt="KG4" loading="lazy"><div class="caption">Lineup</div><div class="subcaption">Students in the lineup</div></div>
+        <div class="gallery-card"><img src="r.jpg" alt="KG5" loading="lazy"><div class="caption">Play area</div><div class="subcaption">Play-based Learning</div></div>
+      </div>
+    </section>
+
+    <!-- Primary -->
+    <section class="gallery-section">
+      <h2>Primary School</h2>
+      <div class="gallery-grid">
+        <div class="gallery-card"><img src="bonael1.jpg" alt="Primary 1" loading="lazy"><div class="caption">Classroom</div><div class="subcaption">Students classroom</div></div>
+        <div class="gallery-card"><img src="bonael2.jpg" alt="Primary 2" loading="lazy"><div class="caption">Lineup</div><div class="subcaption">Students at lineup</div></div>
+        <div class="gallery-card"><img src="el4.jpg" alt="Primary 3" loading="lazy"><div class="caption">Lunch Break</div><div class="subcaption">Students having fun in lunch break</div></div>
+        <div class="gallery-card"><img src="el5.jpg" alt="Primary 4" loading="lazy"><div class="caption">Dinning room</div><div class="subcaption">Students eating in dinning room</div></div>
+        <div class="gallery-card"><img src="el3.jpg" alt="Primary 5" loading="lazy"><div class="caption">Classroom</div><div class="subcaption">Students learning</div></div>
+      </div>
+    </section>
+
+    <!-- High School -->
+    <section class="gallery-section">
+      <h2>High School</h2>
+      <div class="gallery-grid">
+        <div class="gallery-card"><img src="lib1.jpg" alt="High 1" loading="lazy"><div class="caption">Classroom-1</div><div class="subcaption"></div></div>
+        <div class="gallery-card"><img src="lib2.jpg" alt="High 2" loading="lazy"><div class="caption">Classroom-2</div><div class="subcaption"></div></div>
+        <div class="gallery-card"><img src="lib7.jpg" alt="High 3" loading="lazy"><div class="caption">Classroom-3</div><div class="subcaption"></div></div>
+        <div class="gallery-card"><img src="lib6.jpg" alt="High 4" loading="lazy"><div class="caption">Classroom-4</div><div class="subcaption"></div></div>
+      </div>
+    </section>
+
+    <!-- Library -->
+    <section class="gallery-section">
+      <h2>Library</h2>
+      <div class="gallery-grid">
+        <div class="gallery-card"><img src="lib4.jpg" alt="Library 1" loading="lazy"><div class="caption">Computers</div><div class="subcaption">Reading & Research</div></div>
+        <div class="gallery-card"><img src="lib3.jpg" alt="Library 2" loading="lazy"><div class="caption">Reading Time</div><div class="subcaption">Students</div></div>
+        <div class="gallery-card"><img src="lib5.jpg" alt="Library 3" loading="lazy"><div class="caption">Team work</div><div class="subcaption">Discuss</div></div>
+        <div class="gallery-card"><img src="lib01.jpg" alt="Library 5" loading="lazy"><div class="caption">Readers</div><div class="subcaption">Study</div></div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container" style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;align-items:center">
+      <div>
+        <strong>Bonafide International School (BIS)</strong>
+        <div style="color:var(--muted);font-size:13px">Hawassa, Ethiopia</div>
+      </div>
+      <div style="display:flex;gap:18px;align-items:center">
+        <div style="color:var(--muted);font-size:13px">Phone: +25146 2125 487</div>
+        <div style="color:var(--muted);font-size:13px">Email: Bonafideschool@gmail.com</div>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
