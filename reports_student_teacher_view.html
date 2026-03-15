@@ -138,53 +138,106 @@ header {
     .summary-card:last-child { border-left: 5px solid var(--danger); }
     .summary-card:last-child p { color: var(--danger); }
 
-    .report-section {
+    .report-shell {
         background: var(--card);
         border-radius: 12px;
         box-shadow: 0 4px 12px rgba(0,0,0,0.05);
         padding: 20px;
+        margin-top: 20px;
     }
 
-    .table-responsive { overflow-x: auto; }
-    
-    .report-table {
+    .grade-chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 16px;
+    }
+
+    .grade-chip {
+        padding: 8px 14px;
+        border-radius: 999px;
+        border: 1px solid #e2e8f0;
+        background: #f8fafc;
+        font-weight: 600;
+        font-size: 14px;
+        cursor: pointer;
+        color: #0f172a;
+    }
+
+    .grade-chip.active {
+        background: var(--teacher-accent);
+        border-color: var(--teacher-accent);
+        color: #fff;
+    }
+
+    .grade-chip.disabled {
+        background: #e5e7eb;
+        border-color: #e5e7eb;
+        color: var(--muted);
+        cursor: not-allowed;
+    }
+
+    .grade-layout {
+        display: grid;
+        grid-template-columns: 220px minmax(0,1fr);
+        gap: 16px;
+        align-items: flex-start;
+    }
+
+    .grade-box-label {
+        font-size: 13px;
+        color: var(--muted);
+        margin-bottom: 8px;
+    }
+
+    .student-table-wrap {
+        overflow-x: auto;
+    }
+
+    .student-table {
         width: 100%;
         border-collapse: collapse;
-        min-width: 900px;
+        min-width: 420px;
     }
 
-    .report-table th, .report-table td {
-        padding: 12px 15px;
-        text-align: left;
+    .student-table th,
+    .student-table td {
+        padding: 10px 12px;
         border-bottom: 1px solid #e2e8f0;
-        font-size: 15px;
+        font-size: 14px;
+        text-align: left;
     }
-    
-    .report-table th {
-        background-color: #f8fafc;
+
+    .student-table th {
+        background: #f8fafc;
         font-weight: 600;
         color: var(--accent);
-        text-transform: uppercase;
     }
-    
-    .grade-placeholder {
-        font-weight: 700;
-        color: var(--success);
-    }
-    .failed {
-        color: var(--danger);
-        font-weight: 700;
-    }
-    .btn-edit {
-        background: var(--teacher-accent); color: white; padding: 6px 10px; border: none;
-        border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 13px;
-    }
-    .btn-edit:hover { background: #eab308; }
 
-    /* --- NEW --- Style for the disabled button */
-    .btn-edit:disabled {
-        background: var(--muted);
-        opacity: 0.7;
+    .student-table input[type="text"],
+    .student-table input[type="number"] {
+        width: 100%;
+        padding: 6px 8px;
+        border-radius: 6px;
+        border: 1px solid #e2e8f0;
+        font-size: 14px;
+        box-sizing: border-box;
+    }
+
+    .btn-save-grade {
+        background: var(--success);
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        padding: 8px 14px;
+        font-weight: 600;
+        font-size: 14px;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+
+    .btn-save-grade[disabled] {
+        opacity: .6;
         cursor: not-allowed;
     }
 
@@ -243,12 +296,11 @@ header {
     /* --- Responsiveness --- */
     @media (max-width: 768px) {
         .summary-grid { grid-template-columns: 1fr 1fr; gap: 15px; }
-        .report-table th, .report-table td { font-size: 13px; padding: 10px 8px; }
         .nav { padding: 10px 16px; } 
         .container { padding: 16px; }
         .brand .logo { width: 150px; height: 70px; box-shadow: none; }
-        .btn-edit { padding: 4px 8px; font-size: 12px; }
-        .modal-content { width: 95%; margin: 10px; }
+        .grade-layout { grid-template-columns: 1fr; }
+        .student-table th, .student-table td { font-size: 12px; }
     }
 
     @media (max-width: 480px) {
@@ -297,176 +349,32 @@ header {
       <div id="importResult" style="margin-top:10px;font-size:14px;color:var(--muted)"></div>
     </div>
 
-    <div class="summary-grid">
-        <div class="summary-card">
-            <h3>Year</h3>
-            <p>20XX/20YY</p>
+    <div class="report-shell">
+      <h2>Students by Grade (Edit Totals)</h2>
+      <p class="grade-box-label">Tap a grade box. All students in that grade will appear on the right with editable total marks.</p>
+      <div class="grade-layout">
+        <div>
+          <div class="grade-box-label">Grades assigned to you by admin</div>
+          <div id="gradeChips" class="grade-chips"></div>
         </div>
-        <div class="summary-card">
-            <h3>Semester</h3>
-            <p>Semester 2</p>
-        </div>
-        <div class="summary-card">
-            <h3>Average Grade</h3>
-            <p id="overall-avg" class="grade-placeholder">9X%</p>
-        </div>
-        <div class="summary-card">
-            <h3>Attendance Rate</h3>
-            <p class="failed">XX%</p>
-        </div>
-    </div>
-
-    <section class="report-section">
-        <h2>Detailed Subject Performance (Edit Grades)</h2>
-        <div class="table-responsive">
-            <table class="report-table">
-                <thead>
-                    <tr>
-                        <th>Subject</th>
-                        <th>Teacher</th>
-                        <th>Overall Grade</th>
-                        <th>Mid-Term Score</th>
-                        <th>Final Exam Score</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr id="Math-row" data-subject="Mathematics" data-midterm="90" data-final="94" data-attendance="95">
-                        <td>Mathematics</td>
-                        <td>Mr. Daniel Bekele</td>
-                        <td class="grade-placeholder">92%</td>
-                        <td data-score="midterm">90%</td>
-                        <td data-score="final">94%</td>
-                        <td><button class="btn-edit" onclick="openEditGradeModal(this)">Edit Grade</button></td>
-                    </tr>
-                    <tr id="Physics-row" data-subject="Science/Physics" data-midterm="70" data-final="65" data-attendance="80">
-                        <td>Science/Physics</td>
-                        <td>Ms. Sofia Kassa</td>
-                        <td class="failed">68%</td>
-                        <td data-score="midterm">70%</td>
-                        <td data-score="final">65%</td>
-                        <td><button class="btn-edit" disabled>Edit Grade</button></td>
-                    </tr>
-                    <tr id="English-row" data-subject="English Literature" data-midterm="95" data-final="97" data-attendance="99">
-                        <td>English Literature</td>
-                        <td>Mr. Abebe Alene</td>
-                        <td class="grade-placeholder">96%</td>
-                        <td data-score="midterm">95%</td>
-                        <td data-score="final">97%</td>
-                        <td><button class="btn-edit" disabled>Edit Grade</button></td>
-                    </tr>
-                    <tr id="SocialStudies-row" data-subject="Social Studies" data-midterm="92" data-final="88" data-attendance="90">
-                        <td>Social Studies</td>
-                        <td>Mrs. Hanna G/Selassie</td>
-                        <td class="grade-placeholder">90%</td>
-                        <td data-score="midterm">92%</td>
-                        <td data-score="final">88%</td>
-                        <td><button class="btn-edit" disabled>Edit Grade</button></td>
-                    </tr>
-                    <tr id="Technology-row" data-subject="Technology" data-midterm="95" data-final="85" data-attendance="92">
-                        <td>Technology</td>
-                        <td>Mr. Yonas Tesfaye</td>
-                        <td class="grade-placeholder">90%</td>
-                        <td data-score="midterm">95%</td>
-                        <td data-score="final">85%</td>
-                        <td><button class="btn-edit" disabled>Edit Grade</button></td>
-                    </tr>
-                    <tr id="Biology-row" data-subject="Biology" data-midterm="85" data-final="89" data-attendance="95">
-                        <td>Biology</td>
-                        <td>Dr. Eleni Zewde</td>
-                        <td class="grade-placeholder">87%</td>
-                        <td data-score="midterm">85%</td>
-                        <td data-score="final">89%</td>
-                        <td><button class="btn-edit" disabled>Edit Grade</button></td>
-                    </tr>
-                    <tr id="Chemistry-row" data-subject="Chemistry" data-midterm="78" data-final="75" data-attendance="85">
-                        <td>Chemistry</td>
-                        <td>Mr. Fitsum Girma</td>
-                        <td>76%</td>
-                        <td data-score="midterm">78%</td>
-                        <td data-score="final">75%</td>
-                        <td><button class="btn-edit" disabled>Edit Grade</button></td>
-                    </tr>
-                    <tr id="History-row" data-subject="History" data-midterm="92" data-final="90" data-attendance="98">
-                        <td>History</td>
-                        <td>Ms. Meron Tadesse</td>
-                        <td class="grade-placeholder">91%</td>
-                        <td data-score="midterm">92%</td>
-                        <td data-score="final">90%</td>
-                        <td><button class="btn-edit" disabled>Edit Grade</button></td>
-                    </tr>
-                    <tr id="Geography-row" data-subject="Geography" data-midterm="80" data-final="85" data-attendance="90">
-                        <td>Geography</td>
-                        <td>Mr. Samuel Lemma</td>
-                        <td class="grade-placeholder">83%</td>
-                        <td data-score="midterm">80%</td>
-                        <td data-score="final">85%</td>
-                        <td><button class="btn-edit" disabled>Edit Grade</button></td>
-                    </tr>
-                    <tr id="Art-row" data-subject="Art/Design" data-midterm="98" data-final="99" data-attendance="100">
-                        <td>Art/Design</td>
-                        <td>Mrs. Kidist Alemu</td>
-                        <td class="grade-placeholder">98%</td>
-                        <td data-score="midterm">98%</td>
-                        <td data-score="final">99%</td>
-                        <td><button class="btn-edit" disabled>Edit Grade</button></td>
-                    </tr>
-                    <tr id="PE-row" data-subject="Physical Education" data-midterm="100" data-final="95" data-attendance="95">
-                        <td>Physical Education</td>
-                        <td>Coach Tsegaye Wondafrash</td>
-                        <td class="grade-placeholder">98%</td>
-                        <td data-score="midterm">100%</td>
-                        <td data-score="final">95%</td>
-                        <td><button class="btn-edit" disabled>Edit Grade</button></td>
-                    </tr>
-                    <tr id="Language-row" data-subject="Second Language" data-midterm="72" data-final="78" data-attendance="85">
-                        <td>Second Language</td>
-                        <td>Ms. Fatuma Ali</td>
-                        <td>75%</td>
-                        <td data-score="midterm">72%</td>
-                        <td data-score="final">78%</td>
-                        <td><button class="btn-edit" disabled>Edit Grade</button></td>
-                    </tr>
-                    <tr id="Ethics-row" data-subject="Life Skills/Ethics" data-midterm="95" data-final="95" data-attendance="100">
-                        <td>Life Skills/Ethics</td>
-                        <td>Mr. Dawit Moges</td>
-                        <td class="grade-placeholder">97%</td>
-                        <td data-score="midterm">95%</td>
-                        <td data-score="final">95%</td>
-                        <td><button class="btn-edit" disabled>Edit Grade</button></td>
-                    </tr>
-                </tbody>
+        <div>
+          <div class="student-table-wrap">
+            <table class="student-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Student name</th>
+                  <th>Grade</th>
+                  <th>Total mark (%)</th>
+                </tr>
+              </thead>
+              <tbody id="studentRows">
+              </tbody>
             </table>
+          </div>
+          <button id="saveGradeButton" class="btn-save-grade" onclick="saveGradeTotals()" disabled>Save totals for this grade</button>
         </div>
-    </section>
-    
-    <div id="editGradeModal" class="modal-overlay" onclick="closeEditGradeModal(event)">
-        <div class="modal-content" onclick="event.stopPropagation()">
-            <div class="modal-header">
-                <h3 id="modalSubjectName">Edit Grades for [Subject Placeholder]</h3>
-                <button class="close-btn" onclick="closeEditGradeModal()">&times;</button>
-            </div>
-            <form id="gradeEditForm" onsubmit="saveNewGrades(event)">
-                <input type="hidden" id="gradeEditSubject" name="subject">
-
-                <div class="form-group">
-                    <label for="midTermScore">Mid-Term Score (%)</label>
-                    <input type="number" id="midTermScore" name="midTermScore" min="0" max="100" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="finalExamScore">Final Exam Score (%)</label>
-                    <input type="number" id="finalExamScore" name="finalExamScore" min="0" max="100" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="attendanceScore">Attendance Score (%)</label>
-                    <input type="number" id="attendanceScore" name="attendanceScore" min="0" max="100" required>
-                </div>
-
-                <button type="submit" class="btn-save">Save & Update Grades</button>
-            </form>
-        </div>
+      </div>
     </div>
 
   </main>
@@ -486,131 +394,108 @@ header {
 
   <script src="js/bis_store.js"></script>
   <script>
-    BIS.auth.requireAuth({ role: 'teacher', redirectTo: 'login.html' });
+    const teacherAcct = BIS.auth.requireAuth({ role: 'teacher', redirectTo: 'login.html' });
 
-    // --- Grade Persistence and Calculation Functions ---
-    function calculateOverall(midTerm, finalExam, attendance) {
-        // Mock Grade Calculation: Mid-Term (40%) + Final (40%) + Attendance (20%)
-        const overall = (parseInt(midTerm) * 0.4) + (parseInt(finalExam) * 0.4) + (parseInt(attendance) * 0.2);
-        return Math.round(overall);
+    function parseTeachingGrades(raw) {
+      if (!raw) return [];
+      return String(raw)
+        .split(',')
+        .map((g) => g.trim().toUpperCase())
+        .filter(Boolean);
     }
 
-    function updateRow(row, newMidTerm, newFinal, newAttendance, newOverall) {
-        // Update the display cells
-        row.querySelector('td:nth-child(3)').textContent = `${newOverall}%`; // Overall Grade
-        row.querySelector('td:nth-child(4)').textContent = `${newMidTerm}%`; // Mid-Term Score
-        row.querySelector('td:nth-child(5)').textContent = `${newFinal}%`; // Final Exam Score
-        
-        // Update the dataset so the modal opens with the new value next time
-        row.dataset.midterm = newMidTerm;
-        row.dataset.final = newFinal;
-        row.dataset.attendance = newAttendance; 
-
-        // Apply conditional styling for pass/fail (assuming 70% is passing)
-        const overallCell = row.querySelector('td:nth-child(3)');
-        overallCell.classList.remove('grade-placeholder', 'failed');
-        if (newOverall >= 70) {
-            overallCell.classList.add('grade-placeholder');
-        } else {
-            overallCell.classList.add('failed');
+    function buildGradeChips() {
+      const chipsEl = document.getElementById('gradeChips');
+      const allGrades = parseTeachingGrades(teacherAcct.profile?.teachingGrades || '');
+      chipsEl.innerHTML = '';
+      if (!allGrades.length) {
+        const span = document.createElement('span');
+        span.textContent = 'No grades assigned by admin yet.';
+        span.style.color = 'var(--muted)';
+        span.style.fontSize = '13px';
+        chipsEl.appendChild(span);
+        document.getElementById('saveGradeButton').disabled = true;
+        return;
+      }
+      allGrades.forEach((g, idx) => {
+        const chip = document.createElement('button');
+        chip.type = 'button';
+        chip.className = 'grade-chip';
+        chip.textContent = g;
+        chip.dataset.grade = g;
+        chip.onclick = () => selectGrade(g);
+        if (idx === 0) {
+          chip.classList.add('active');
+          selectGrade(g);
         }
+        chipsEl.appendChild(chip);
+      });
     }
 
-    window.loadGrades = function() {
-        const rows = document.querySelectorAll('.report-table tbody tr');
-        let totalOverallGrade = 0;
-        let count = 0;
+    let currentGrade = null;
 
-        rows.forEach(row => {
-            const subject = row.dataset.subject;
-            // Key is sanitized to be safe for local storage
-            const key = `student_grades_${subject.replace(/[^a-zA-Z0-9]/g, '')}`; 
-            const storedData = localStorage.getItem(key);
-            
-            let currentMidTerm, currentFinal, currentAttendance;
+    function selectGrade(grade) {
+      currentGrade = grade;
+      const chips = document.querySelectorAll('.grade-chip');
+      chips.forEach((c) => {
+        if (c.dataset.grade === grade) c.classList.add('active');
+        else c.classList.remove('active');
+      });
+      loadStudentsForGrade(grade);
+    }
 
-            if (storedData) {
-                const grades = JSON.parse(storedData);
-                currentMidTerm = grades.midTerm;
-                currentFinal = grades.finalExam;
-                currentAttendance = grades.attendance;
-            } else {
-                // Use default values if no stored data
-                currentMidTerm = row.dataset.midterm;
-                currentFinal = row.dataset.final;
-                currentAttendance = row.dataset.attendance;
-            }
-            
-            const newOverall = calculateOverall(currentMidTerm, currentFinal, currentAttendance);
-            updateRow(row, currentMidTerm, currentFinal, currentAttendance, newOverall);
-            totalOverallGrade += newOverall;
-            count++;
-        });
+    function loadStudentsForGrade(grade) {
+      const tbody = document.getElementById('studentRows');
+      tbody.innerHTML = '';
+      const accounts = BIS.accounts.list();
+      const students = accounts.filter(
+        (a) => a.role === 'student' && String(a.profile?.grade || '').toUpperCase() === grade
+      );
+      if (!students.length) {
+        const row = document.createElement('tr');
+        const cell = document.createElement('td');
+        cell.colSpan = 4;
+        cell.style.textAlign = 'center';
+        cell.style.color = 'var(--muted)';
+        cell.textContent = 'No students in this grade yet.';
+        row.appendChild(cell);
+        tbody.appendChild(row);
+        document.getElementById('saveGradeButton').disabled = true;
+        return;
+      }
+      students.forEach((s, idx) => {
+        const tr = document.createElement('tr');
+        tr.dataset.id = s.id;
+        const mark = s.profile?.marks?.total || '';
+        tr.innerHTML = `
+          <td>${idx + 1}</td>
+          <td>${s.displayName || s.username}</td>
+          <td>${grade}</td>
+          <td><input type="text" value="${mark.replace('%','')}" placeholder="e.g. 93"></td>
+        `;
+        tbody.appendChild(tr);
+      });
+      document.getElementById('saveGradeButton').disabled = false;
+    }
 
-        // Update Overall GPA Summary
-        if (count > 0) {
-            const avg = Math.round(totalOverallGrade / count);
-            const avgElement = document.getElementById('overall-avg');
-            avgElement.textContent = `${avg}%`;
-            avgElement.classList.remove('grade-placeholder', 'failed');
-            if (avg >= 70) {
-                avgElement.classList.add('grade-placeholder');
-            } else {
-                avgElement.classList.add('failed');
-            }
+    window.saveGradeTotals = function () {
+      if (!currentGrade) return;
+      const tbody = document.getElementById('studentRows');
+      const rows = Array.from(tbody.querySelectorAll('tr'));
+      if (!rows.length) return;
+      rows.forEach((tr) => {
+        const id = tr.dataset.id;
+        const input = tr.querySelector('input');
+        if (!id || !input) return;
+        const value = input.value.trim();
+        const normalized = value ? `${value.replace('%','')}%` : '';
+        try {
+          BIS.accounts.update(id, { profile: { marks: { total: normalized, details: [] } } }, { who: teacherAcct.id });
+        } catch (e) {
+          console.error('Failed to update marks for', id, e);
         }
-    };
-
-    window.openEditGradeModal = function(buttonElement) {
-        const row = buttonElement.closest('tr');
-        const subject = row.dataset.subject;
-        const midTerm = row.dataset.midterm;
-        const finalExam = row.dataset.final;
-        const attendance = row.dataset.attendance;
-
-        document.getElementById('modalSubjectName').textContent = `Edit Grades for ${subject}`;
-        document.getElementById('gradeEditSubject').value = subject;
-        document.getElementById('midTermScore').value = midTerm;
-        document.getElementById('finalExamScore').value = finalExam;
-        document.getElementById('attendanceScore').value = attendance;
-
-        document.getElementById('editGradeModal').classList.add('open');
-    };
-
-    window.closeEditGradeModal = function(event) {
-        if (!event || event.target.id === 'editGradeModal') {
-            document.getElementById('editGradeModal').classList.remove('open');
-        }
-    };
-
-    window.saveNewGrades = function(event) {
-        event.preventDefault(); 
-
-        const subject = document.getElementById('gradeEditSubject').value;
-        const newMidTerm = document.getElementById('midTermScore').value;
-        const newFinal = document.getElementById('finalExamScore').value;
-        const newAttendance = document.getElementById('attendanceScore').value;
-
-        const newOverall = calculateOverall(newMidTerm, newFinal, newAttendance);
-
-        // 1. Save the new grades to localStorage for persistence
-        const gradesToStore = {
-            midTerm: newMidTerm,
-            finalExam: newFinal,
-            attendance: newAttendance
-        };
-        const key = `student_grades_${subject.replace(/[^a-zA-Z0-9]/g, '')}`;
-        localStorage.setItem(key, JSON.stringify(gradesToStore));
-
-        // 2. Update the display and attributes on the current (teacher) page
-        const row = document.querySelector(`tr[data-subject="${subject}"]`);
-        if (row) {
-            updateRow(row, newMidTerm, newFinal, newAttendance, newOverall);
-        }
-
-        alert(`Grades for ${subject} updated successfully!\nNew Overall Grade: ${newOverall}%`);
-        closeEditGradeModal();
-        loadGrades(); // Recalculate overall average after change
+      });
+      alert(`Saved totals for grade ${currentGrade}.`);
     };
 
     window.logout = function(){
@@ -652,6 +537,9 @@ header {
       if (input) input.value = '';
       if (resultEl) resultEl.textContent = '';
     };
+
+    // Initialize grade boxes on load
+    buildGradeChips();
   </script>
 </body>
 </html>
