@@ -122,8 +122,24 @@
     if (db.accounts && db.accounts.length > 0) return;
     const seeds = [
       { id: "ADM-0001", role: "admin", username: "admin", name: "System Administrator", tempPassword: "Admin@2026" },
-      { id: "TCH-1001", role: "teacher", username: "daniel.math", name: "Mr Daniel Bekele", subject: "Mathematics", tempPassword: "Teacher@2026" },
-      { id: "TCH-1002", role: "teacher", username: "eleni.english", name: "Ms Eleni Tesfaye", subject: "English Literature", tempPassword: "Teacher@2026" },
+      {
+        id: "TCH-1001",
+        role: "teacher",
+        username: "daniel.math",
+        name: "Mr Daniel Bekele",
+        subject: "Mathematics",
+        teachingGrades: "7A,7B,10A",
+        tempPassword: "Teacher@2026",
+      },
+      {
+        id: "TCH-1002",
+        role: "teacher",
+        username: "eleni.english",
+        name: "Ms Eleni Tesfaye",
+        subject: "English Literature",
+        teachingGrades: "7B,10B",
+        tempPassword: "Teacher@2026",
+      },
       { id: "STD-2001", role: "student", username: "abebech.10a", name: "Abebech Kebede", grade: "10", teacherName: "Mr Daniel Bekele", marks: { total: "93%", details: [] }, tempPassword: "Student@2026" },
       { id: "STD-2002", role: "student", username: "chala.10b", name: "Chala Dibaba", grade: "10", teacherName: "Ms Eleni Tesfaye", marks: { total: "88%", details: [] }, tempPassword: "Student@2026" },
       { id: "STD-2003", role: "student", username: "fatuma.11a", name: "Fatuma Ali", grade: "11", teacherName: "Mr Daniel Bekele", marks: { total: "95%", details: [] }, tempPassword: "Student@2026" },
@@ -277,6 +293,7 @@
         marks: payload?.marks ?? { total: "", details: [] },
         // teacher fields
         subject: payload?.subject ?? payload?.detail ?? "",
+        teachingGrades: payload?.teachingGrades ?? "",
       },
       password: {
         saltB64: randomSaltB64(),
@@ -403,4 +420,3 @@
     util: { normalizeUsername },
   };
 })();
-
