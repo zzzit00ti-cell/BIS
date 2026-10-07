@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Teacher dashboard — Bonafide International School</title>
+  <meta name="robots" content="noindex" />
+  <link rel="stylesheet" href="css/site.css" />
+</head>
+<body>
+  <header id="site-header"></header>
+
+  <main class="container">
+    <div class="pill"><h1>Teacher dashboard</h1></div>
+
+    <section class="info-section">
+      <div class="card card-green profile-card" id="profileCard"></div>
+      <div class="stat-grid" id="stats"></div>
+    </section>
+
+    <section class="action-grid" style="margin-top:22px">
+      <div class="card card-green action-card">
+        <h3>Take attendance</h3>
+        <p id="attendanceHint">Record daily presence for the grades assigned to you.</p>
+        <a class="btn btn-green" href="attendance_teacher.html">Open attendance</a>
+      </div>
+      <div class="card card-accent action-card">
+        <h3>Enter grades</h3>
+        <p>Record subject marks and personal-development ratings for your students.</p>
+        <a class="btn" href="reports_student_teacher_view.html">Open gradebook</a>
+      </div>
+      <div class="card card-amber action-card">
+        <h3>My timetable</h3>
+        <p id="timetableHint">Your weekly teaching schedule.</p>
+        <a class="btn btn-amber" href="timetable_teacher.html">View timetable</a>
+      </div>
+      <div class="card card-accent action-card">
+        <h3>Announcements</h3>
+        <p>Read the latest news published by the school administration.</p>
+        <a class="btn" href="announcements_teacher.html">Read announcements</a>
+      </div>
+    </section>
+
+    <div class="split-panels" style="margin-top:22px">
+      <div class="card">
+        <h2>Today at a glance</h2>
+        <ul class="list-plain" id="todayList"></ul>
+      </div>
+      <div class="card">
+        <h2>My students</h2>
+        <ul class="list-plain" id="studentList"></ul>
+      </div>
+    </div>
+  </main>
+
+  <footer id="site-footer"></footer>
+
+  <script src="js/bis_store.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/dashboard_teacher.js"></script>
+</body>
+</html>

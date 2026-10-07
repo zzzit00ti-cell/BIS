@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sign in — Bonafide International School</title>
+  <meta name="robots" content="noindex" />
+  <meta name="description" content="Secure sign in for the Bonafide International School management system." />
+  <link rel="stylesheet" href="css/site.css" />
+</head>
+<body>
+  <header id="site-header"></header>
+
+  <main class="container">
+    <div class="auth-wrap">
+      <div class="auth-card">
+        <h1 id="authTitle">BIS School System</h1>
+        <p id="authSubtitle">Sign in with your school account.</p>
+
+        <div id="formError" class="alert alert-err hidden" role="alert"></div>
+        <div id="formNotice" class="alert alert-info hidden" role="status"></div>
+
+        <form id="loginPanel" autocomplete="on" novalidate>
+          <div class="field">
+            <label for="username">Username</label>
+            <input id="username" name="username" type="text" autocomplete="username" autocapitalize="none"
+              spellcheck="false" required maxlength="32" />
+          </div>
+          <div class="field">
+            <label for="password">Password</label>
+            <div class="pw-row">
+              <input id="password" name="password" type="password" autocomplete="current-password" required maxlength="128" />
+              <button type="button" class="btn btn-ghost" id="togglePw" aria-label="Show password">Show</button>
+            </div>
+          </div>
+          <button type="submit" class="btn" id="loginBtn" style="width:100%">Sign in</button>
+          <p class="hint" style="margin-top:14px">
+            Sessions end after 30 minutes of inactivity. Five failed attempts lock an account for 15 minutes.
+          </p>
+        </form>
+
+        <form id="setupPanel" class="hidden" autocomplete="on" novalidate>
+          <div class="alert alert-info">
+            This system has no accounts yet. Create the first administrator to get started.
+          </div>
+          <div class="field">
+            <label for="setupName">Full name</label>
+            <input id="setupName" type="text" required maxlength="80" autocomplete="name" />
+          </div>
+          <div class="field">
+            <label for="setupUsername">Username</label>
+            <input id="setupUsername" type="text" required maxlength="32" autocapitalize="none" spellcheck="false" />
+            <div class="hint" id="setupUsernameHint">3–32 characters: letters, numbers, dot, dash, underscore.</div>
+          </div>
+          <div class="field">
+            <label for="setupEmail">Email (optional)</label>
+            <input id="setupEmail" type="email" maxlength="120" autocomplete="email" />
+          </div>
+          <div class="field">
+            <label for="setupPassword">Password</label>
+            <div class="pw-row">
+              <input id="setupPassword" type="password" required maxlength="128" autocomplete="new-password" />
+              <button type="button" class="btn btn-ghost" data-generate="setupPassword">Generate</button>
+            </div>
+            <div id="setupPwFeedback"></div>
+          </div>
+          <div class="field">
+            <label for="setupConfirm">Confirm password</label>
+            <input id="setupConfirm" type="password" required maxlength="128" autocomplete="new-password" />
+            <div class="hint" id="setupMatchHint"></div>
+          </div>
+          <label style="display:flex;align-items:center;gap:9px;font-weight:500;margin-bottom:16px">
+            <input type="checkbox" id="setupDemo" checked />
+            <span>Also create 2 sample teachers and 3 sample students to try the system</span>
+          </label>
+          <button type="submit" class="btn btn-green" id="setupBtn" style="width:100%">Create administrator</button>
+        </form>
+
+        <div id="demoBox" class="demo-box hidden">
+          <strong>Sample accounts</strong> (passwords are shown once, after setup)
+          <div id="demoList"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer id="site-footer"></footer>
+
+  <script src="js/bis_store.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/login.js"></script>
+</body>
+</html>

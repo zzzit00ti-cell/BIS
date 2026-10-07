@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>User management — Bonafide International School</title>
+  <meta name="robots" content="noindex" />
+  <link rel="stylesheet" href="css/site.css" />
+</head>
+<body>
+  <header id="site-header"></header>
+
+  <main class="container">
+    <div class="pill"><h1>User directory</h1></div>
+
+    <div class="row" style="margin-bottom:18px">
+      <input type="search" id="search" class="search-bar" placeholder="Search name, username, ID, grade or subject…" style="max-width:380px;margin:0" />
+      <label class="small" for="roleFilter" style="margin:0">Role</label>
+      <select id="roleFilter" style="max-width:180px">
+        <option value="">All roles</option>
+        <option value="admin">Administrators</option>
+        <option value="teacher">Teachers</option>
+        <option value="student">Students</option>
+      </select>
+      <span class="right muted small" id="count"></span>
+      <button class="btn" id="newUserBtn">+ New account</button>
+    </div>
+
+    <div class="card" id="createPanel" style="display:none">
+      <h2 id="createTitle">Create a new account</h2>
+      <p class="muted small" style="margin-top:-6px">
+        A strong temporary password is generated for you. Share it once — the user must change it at first sign-in.
+      </p>
+      <form id="createForm" novalidate>
+        <div class="field-row">
+          <div class="field">
+            <label for="role">Role</label>
+            <select id="role">
+              <option value="student">Student</option>
+              <option value="teacher">Teacher</option>
+              <option value="admin">Administrator</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="displayName">Full name</label>
+            <input id="displayName" type="text" maxlength="80" required placeholder="e.g. Abebe Kebede" />
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="username">Username</label>
+            <input id="username" type="text" maxlength="32" autocapitalize="none" spellcheck="false" required />
+            <div class="hint" id="usernameHint">Auto-filled from the name; you can change it.</div>
+          </div>
+          <div class="field">
+            <label for="email">Email (optional)</label>
+            <input id="email" type="email" maxlength="120" />
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="password">Temporary password</label>
+          <div class="row" style="flex-wrap:nowrap">
+            <input id="password" type="text" style="flex:1;font-family:ui-monospace,Menlo,monospace" />
+            <button type="button" class="btn btn-ghost" id="regenPw">Regenerate</button>
+          </div>
+          <div id="pwFeedback"></div>
+        </div>
+
+        <div class="field-row" id="studentFields">
+          <div class="field">
+            <label for="grade">Grade</label>
+            <input id="grade" type="text" maxlength="20" placeholder="e.g. 10" />
+          </div>
+          <div class="field">
+            <label for="section">Section</label>
+            <input id="section" type="text" maxlength="20" placeholder="e.g. A" />
+          </div>
+          <div class="field">
+            <label for="age">Age</label>
+            <input id="age" type="number" min="3" max="30" />
+          </div>
+          <div class="field">
+            <label for="sex">Sex</label>
+            <select id="sex"><option value="">Not stated</option><option value="F">Female</option><option value="M">Male</option></select>
+          </div>
+        </div>
+
+        <div class="field" id="teacherPickField">
+          <label for="teacherId">Class teacher (optional)</label>
+          <select id="teacherId"><option value="">Not assigned</option></select>
+        </div>
+
+        <div class="field-row hidden" id="teacherFields">
+          <div class="field">
+            <label for="subject">Subject</label>
+            <input id="subject" type="text" maxlength="60" placeholder="e.g. Mathematics" />
+          </div>
+          <div class="field">
+            <label for="teachingGrades">Grades taught</label>
+            <input id="teachingGrades" type="text" maxlength="120" placeholder="e.g. 10A, 10B, 11A" />
+            <div class="hint">Comma separated. Used for rosters, attendance and timetables.</div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="photo">Photo (optional)</label>
+          <input id="photo" type="file" accept="image/*" />
+        </div>
+
+        <div class="row">
+          <button type="submit" class="btn btn-green" id="createBtn">Create account</button>
+          <button type="button" class="btn btn-ghost" id="cancelCreate">Cancel</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="card" id="editPanel" style="display:none">
+      <h2>Edit account</h2>
+      <form id="editForm" novalidate>
+        <input type="hidden" id="editId" />
+        <div class="field-row">
+          <div class="field">
+            <label for="editName">Full name</label>
+            <input id="editName" type="text" maxlength="80" />
+          </div>
+          <div class="field">
+            <label for="editUsername">Username</label>
+            <input id="editUsername" type="text" maxlength="32" autocapitalize="none" spellcheck="false" />
+            <div class="hint" id="editUsernameHint"></div>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="editRole">Role</label>
+            <select id="editRole"><option value="student">Student</option><option value="teacher">Teacher</option><option value="admin">Administrator</option></select>
+          </div>
+          <div class="field">
+            <label for="editStatus">Status</label>
+            <select id="editStatus"><option value="Active">Active</option><option value="Inactive">Inactive</option><option value="Suspended">Suspended</option></select>
+          </div>
+          <div class="field">
+            <label for="editEmail">Email</label>
+            <input id="editEmail" type="email" maxlength="120" />
+          </div>
+          <div class="field">
+            <label for="editPhone">Phone</label>
+            <input id="editPhone" type="tel" maxlength="40" />
+          </div>
+        </div>
+        <div class="field-row" id="editStudentFields">
+          <div class="field">
+            <label for="editGrade">Grade</label>
+            <input id="editGrade" type="text" maxlength="20" />
+          </div>
+          <div class="field">
+            <label for="editSection">Section</label>
+            <input id="editSection" type="text" maxlength="20" />
+          </div>
+          <div class="field">
+            <label for="editAge">Age</label>
+            <input id="editAge" type="number" min="3" max="30" />
+          </div>
+          <div class="field">
+            <label for="editSex">Sex</label>
+            <select id="editSex"><option value="">Not stated</option><option value="F">Female</option><option value="M">Male</option></select>
+          </div>
+        </div>
+        <div class="field-row hidden" id="editTeacherFields">
+          <div class="field">
+            <label for="editSubject">Subject</label>
+            <input id="editSubject" type="text" maxlength="60" />
+          </div>
+          <div class="field">
+            <label for="editTeachingGrades">Grades taught</label>
+            <input id="editTeachingGrades" type="text" maxlength="120" />
+          </div>
+        </div>
+        <div class="field">
+          <label for="editTeacherId">Class teacher</label>
+          <select id="editTeacherId"><option value="">Not assigned</option></select>
+        </div>
+        <div class="row">
+          <button type="submit" class="btn">Save changes</button>
+          <button type="button" class="btn btn-ghost" id="cancelEdit">Cancel</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="card">
+      <div class="row" style="margin-bottom:10px">
+        <h2 style="margin:0">All accounts</h2>
+        <span class="hint right">Passwords are never exported — only usernames and account details.</span>
+        <button type="button" class="btn btn-ghost" id="exportCsv">Export list (CSV)</button>
+      </div>
+      <div class="table-wrap">
+        <table class="data">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Username</th>
+              <th>Role</th>
+              <th>Details</th>
+              <th>Status</th>
+              <th>Last sign-in</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <footer id="site-footer"></footer>
+
+  <script src="js/bis_store.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/user_management.js"></script>
+</body>
+</html>

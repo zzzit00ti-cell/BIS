@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>My profile — Bonafide International School</title>
+  <meta name="robots" content="noindex" />
+  <link rel="stylesheet" href="css/site.css" />
+</head>
+<body>
+  <header id="site-header"></header>
+
+  <main class="container">
+    <div class="pill"><h1>My profile</h1></div>
+
+    <div class="info-section">
+      <div class="card card-accent profile-card" id="profileCard"></div>
+
+      <div class="stack">
+        <div class="card card-green">
+          <h2>Details</h2>
+          <p class="muted small" style="margin-top:-6px">
+            Update your own contact details. Role, grade and subject are managed by an administrator.
+          </p>
+          <form id="profileForm" novalidate>
+            <div class="field-row">
+              <div class="field">
+                <label for="displayName">Full name</label>
+                <input id="displayName" type="text" maxlength="80" required />
+              </div>
+              <div class="field">
+                <label for="username">Username</label>
+                <input id="username" type="text" disabled />
+                <div class="hint">Only an administrator can change a username.</div>
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label for="email">Email</label>
+                <input id="email" type="email" maxlength="120" autocomplete="email" />
+              </div>
+              <div class="field">
+                <label for="phone">Phone</label>
+                <input id="phone" type="tel" maxlength="40" autocomplete="tel" />
+              </div>
+            </div>
+            <div class="field">
+              <label for="photo">Photo</label>
+              <input id="photo" type="file" accept="image/*" />
+              <div class="hint">Images are resized to 320px and stored inside this browser only.</div>
+            </div>
+            <button type="submit" class="btn btn-green">Save profile</button>
+          </form>
+        </div>
+
+        <div class="card card-amber">
+          <h2>Password</h2>
+          <p class="muted small" style="margin-top:-6px">Last changed: <span id="pwChanged">-</span></p>
+          <a class="btn btn-amber" href="change_password.html">Change password</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer id="site-footer"></footer>
+
+  <script src="js/bis_store.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/profile.js"></script>
+</body>
+</html>

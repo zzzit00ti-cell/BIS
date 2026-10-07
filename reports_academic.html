@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>My academic report — Bonafide International School</title>
+  <meta name="robots" content="noindex" />
+  <link rel="stylesheet" href="css/site.css" />
+</head>
+<body>
+  <header id="site-header"></header>
+
+  <main class="container">
+    <div class="pill"><h1>My academic report</h1></div>
+
+    <div class="card card-accent">
+      <div class="report-head">
+        <div>
+          <h2 id="studentName">Student</h2>
+          <p class="muted small" style="margin:4px 0 0" id="studentMeta"></p>
+        </div>
+        <div class="center">
+          <div class="big-average" id="bigAverage">—</div>
+          <div class="muted small" id="bigLetter">No marks yet</div>
+        </div>
+        <button class="btn btn-ghost no-print" id="printBtn">Print / save PDF</button>
+      </div>
+
+      <div class="report-meta" id="reportMeta"></div>
+
+      <h3>Subject results</h3>
+      <div class="table-wrap">
+        <table class="data">
+          <thead>
+            <tr><th>Subject</th><th class="num">Mark (0–100)</th><th class="num">Grade</th><th>Comment</th></tr>
+          </thead>
+          <tbody id="grades"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="split-panels" style="margin-top:20px">
+      <div class="card card-green">
+        <h2>Personal development</h2>
+        <ul class="list-plain" id="conduct"></ul>
+        <p class="hint">Conduct ratings are recorded by your class teacher.</p>
+      </div>
+      <div class="card">
+        <h2>Attendance record</h2>
+        <ul class="list-plain" id="attendance"></ul>
+      </div>
+    </div>
+  </main>
+
+  <footer id="site-footer"></footer>
+
+  <script src="js/bis_store.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/reports_student.js"></script>
+</body>
+</html>

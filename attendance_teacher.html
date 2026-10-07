@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Attendance — Bonafide International School</title>
+  <meta name="robots" content="noindex" />
+  <link rel="stylesheet" href="css/site.css" />
+</head>
+<body>
+  <header id="site-header"></header>
+
+  <main class="container">
+    <div class="pill"><h1>Attendance</h1></div>
+
+    <div class="row" style="margin-bottom:16px">
+      <label for="gradeSelect" style="margin:0">Grade</label>
+      <select id="gradeSelect" style="max-width:180px"></select>
+      <label for="dateInput" style="margin:0">Date</label>
+      <input id="dateInput" type="date" style="max-width:180px" />
+      <button class="btn btn-ghost" id="allPresent">Mark all present</button>
+      <button class="btn btn-ghost" id="clearAll">Clear</button>
+      <button class="btn btn-green right" id="saveBtn">Save attendance</button>
+    </div>
+
+    <div class="stat-grid" id="summary" style="margin-bottom:16px"></div>
+
+    <div class="card">
+      <h2 id="rosterTitle">Students</h2>
+      <div class="table-wrap">
+        <table class="data">
+          <thead>
+            <tr><th>Student</th><th>Grade</th><th>Last recorded</th><th style="width:280px">Status</th></tr>
+          </thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:20px">
+      <h2>Recent attendance days</h2>
+      <ul class="list-plain" id="history"></ul>
+    </div>
+  </main>
+
+  <footer id="site-footer"></footer>
+
+  <script src="js/bis_store.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/attendance_teacher.js"></script>
+</body>
+</html>
